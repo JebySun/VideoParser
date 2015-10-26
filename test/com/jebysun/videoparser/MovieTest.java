@@ -17,7 +17,24 @@ public class MovieTest {
 //		testSearch();
 //		testParseMovie();
 		testGetDetail();
+		
+//		testTv();
 	}
+	
+	public static void testTv() {
+		try {
+			List<Movie> movies = SimpleMovieParser.getZongYiList(1);
+			for (Movie m : movies) {
+				System.out.println(m.getTitle());
+				System.out.println(m.getDetailUrl());
+			}
+		} catch (SocketTimeoutException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public static void testLastestPublic170() {
 		List<Movie> movies = MovieParser.getLastestPublic170();
@@ -67,10 +84,12 @@ public class MovieTest {
 	}
 	
 	private static void testGetDetail() throws SocketTimeoutException, IOException {
-		String s = SimpleMovieParser.getMovieDetail("http://ygdy8.com/html/gndy/dyzz/20151022/49348.html");
-		String a = SimpleMovieParser.getMovieDownloadUrl("http://ygdy8.com/html/gndy/dyzz/20151022/49348.html");
-		System.out.println(s);
-		System.out.println(a);
+		String s = SimpleMovieParser.getMovieDetail("http://www.ygdy8.com/html/dongman/haizeiwangqu/20120506/37572.html");
+		List<String> downloads = SimpleMovieParser.getMovieDownloadUrl();
+//		System.out.println(s);
+		for (String sd : downloads) {
+			System.out.println(sd);
+		}
 	}
 
 }

@@ -50,7 +50,7 @@ public class MovieParser {
 	 * @return
 	 */
 	public static List<Movie> getMovieList(int pageIndex) {
-		String queryUrl = Config.LASTEST_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
+		String queryUrl = Config.MOVIE_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
 		List<Movie> movies = new ArrayList<Movie>();
 		Movie movie = null;
 		try {

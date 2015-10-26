@@ -52,13 +52,85 @@ public class SimpleMovieParser {
 	 * @throws IOException 
 	 */
 	public static List<Movie> getMovieList(int pageIndex) throws IOException, SocketTimeoutException {
-		String queryUrl = Config.LASTEST_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
+		String queryUrl = Config.MOVIE_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
 		List<Movie> movies = new ArrayList<Movie>();
 		Movie movie = null;
 		doc = Jsoup.connect(Config.DOMAIN + queryUrl)
 				.timeout(Config.TIMEOUT * 1000)
 				.get();
 		Elements elements = doc.select("div.co_content8 ul table tr:nth-child(2) td:nth-child(2) a");
+		for (Element e : elements) {
+			movie = new Movie();
+			movie.setTitle(e.text());
+			movie.setDetailUrl(Config.DOMAIN + e.attr("href"));
+			movies.add(movie);
+		}
+		return movies;
+	}
+	
+	/**
+	 * 电视剧列表
+	 * @param pageIndex
+	 * @return
+	 * @throws IOException
+	 * @throws SocketTimeoutException
+	 */
+	public static List<Movie> getTVSeriesList(int pageIndex) throws IOException, SocketTimeoutException {
+		String queryUrl = Config.TV_SERIE_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
+		List<Movie> movies = new ArrayList<Movie>();
+		Movie movie = null;
+		doc = Jsoup.connect(Config.DOMAIN + queryUrl)
+				.timeout(Config.TIMEOUT * 1000)
+				.get();
+		Elements elements = doc.select("div.co_content8 ul table tr:nth-child(2) td:nth-child(2) a");
+		for (Element e : elements) {
+			movie = new Movie();
+			movie.setTitle(e.text());
+			movie.setDetailUrl(Config.DOMAIN + e.attr("href"));
+			movies.add(movie);
+		}
+		return movies;
+	}
+
+	/**
+	 * 综艺列表
+	 * @param pageIndex
+	 * @return
+	 * @throws IOException
+	 * @throws SocketTimeoutException
+	 */
+	public static List<Movie> getZongYiList(int pageIndex) throws IOException, SocketTimeoutException {
+		String queryUrl = Config.ZONGYI_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
+		List<Movie> movies = new ArrayList<Movie>();
+		Movie movie = null;
+		doc = Jsoup.connect(Config.DOMAIN + queryUrl)
+				.timeout(Config.TIMEOUT * 1000)
+				.get();
+		Elements elements = doc.select("div.co_content8 ul table tr:nth-child(2) td:nth-child(2) a:nth-child(2)");
+		for (Element e : elements) {
+			movie = new Movie();
+			movie.setTitle(e.text());
+			movie.setDetailUrl(Config.DOMAIN + e.attr("href"));
+			movies.add(movie);
+		}
+		return movies;
+	}
+	
+	/**
+	 * 动漫列表
+	 * @param pageIndex
+	 * @return
+	 * @throws IOException
+	 * @throws SocketTimeoutException
+	 */
+	public static List<Movie> getDongManList(int pageIndex) throws IOException, SocketTimeoutException {
+		String queryUrl = Config.DONGMAN_PATH.replaceFirst("\\$", String.valueOf(pageIndex));
+		List<Movie> movies = new ArrayList<Movie>();
+		Movie movie = null;
+		doc = Jsoup.connect(Config.DOMAIN + queryUrl)
+				.timeout(Config.TIMEOUT * 1000)
+				.get();
+		Elements elements = doc.select("div.co_content8 ul table tr:nth-child(2) td:nth-child(2) a:nth-child(2)");
 		for (Element e : elements) {
 			movie = new Movie();
 			movie.setTitle(e.text());
@@ -89,12 +161,24 @@ public class SimpleMovieParser {
 				.get();
 		Elements elements = doc.select("div.co_content8 ul table tr:nth-child(1) td:nth-child(2) a");
 		for (Element e : elements) {
+			String name = e.text();
+			//如果不是视频
+			if (isNotVideo(name)) {
+				continue;
+			}
 			movie = new Movie();
-			movie.setTitle(e.text());
+			movie.setTitle(name);
 			movie.setDetailUrl(Config.DOMAIN + e.attr("href"));
 			movies.add(movie);
 		}
 		return movies;
+	}
+	
+	private static boolean isNotVideo(String titleName) {
+		if (titleName.indexOf("单机游戏") != -1 || titleName.indexOf("硬盘版") != -1) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -135,11 +219,16 @@ public class SimpleMovieParser {
 	 * @param doc 
 	 * @return
 	 */
-	public static String getMovieDownloadUrl() {
+	public static List<String> getMovieDownloadUrl() {
 		if (doc == null) {
-			return "doc is null";
+			return new ArrayList<String>();
 		}
-		return doc.select("table[width=95%] tr td a").get(0).text();
+		Elements elements = doc.select("table[width=95%] tr td a");
+		List<String> downloadList = new ArrayList<String>(); 
+		for (Element e : elements) {
+			downloadList.add(e.text());
+		}
+		return downloadList;
 	}
 	
 	
