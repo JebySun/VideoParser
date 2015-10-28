@@ -174,6 +174,11 @@ public class SimpleMovieParser {
 		return movies;
 	}
 	
+	/**
+	 * 根据标题关键字判断是否不是视频
+	 * @param titleName
+	 * @return
+	 */
 	private static boolean isNotVideo(String titleName) {
 		if (titleName.indexOf("单机游戏") != -1 || titleName.indexOf("硬盘版") != -1) {
 			return true;
@@ -194,7 +199,11 @@ public class SimpleMovieParser {
 
 		//调整图片宽度为屏幕宽度，高度自动等比缩放。
 		doc.select("#Zoom img").attr("style", "width:100%; height:auto;");
-		htmlDetail = doc.select("#Zoom p:nth-child(1)").get(0).html();
+		Elements eles = doc.select("#Zoom p:nth-child(1)");
+		if (eles.size()==0) {
+			return "获取视频详情失败。<br/>" + url;
+		}
+		htmlDetail = eles.get(0).html();
 		//如果内容没有多余的杂乱信息，则直接返回
 		if (htmlDetail.startsWith("<img")) {
 			return htmlDetail;
@@ -220,11 +229,11 @@ public class SimpleMovieParser {
 	 * @return
 	 */
 	public static List<String> getMovieDownloadUrl() {
+		List<String> downloadList = new ArrayList<String>(); 
 		if (doc == null) {
-			return new ArrayList<String>();
+			return downloadList;
 		}
 		Elements elements = doc.select("table[width=95%] tr td a");
-		List<String> downloadList = new ArrayList<String>(); 
 		for (Element e : elements) {
 			downloadList.add(e.text());
 		}

@@ -25,7 +25,7 @@ public final class Config {
 	public static final String DONGMAN_PATH = "/html/dongman/list_16_$.html";
 
 	//电影关键字搜索地址
-	public static final String SEARCH_URL = "http://s.kujian.com/plus/search.php?keyword=$&searchtype=title&channeltype=0&orderby=&kwtype=0&pagesize=$&typeid=0&PageNo=$";
+	public static final String SEARCH_URL = "http://www.ygdy8.com/plus/search.php?keyword=$&searchtype=title&channeltype=0&orderby=&kwtype=0&pagesize=$&typeid=0&PageNo=$";
 
 	//获取信息超时时间(秒)
 	public static final int TIMEOUT = 7;

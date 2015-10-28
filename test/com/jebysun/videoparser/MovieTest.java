@@ -14,9 +14,9 @@ public class MovieTest {
 		
 //		testLastestPublic170();
 //		testLastest();
-//		testSearch();
+		testSearch();
 //		testParseMovie();
-		testGetDetail();
+//		testGetDetail();
 		
 //		testTv();
 	}
@@ -47,7 +47,7 @@ public class MovieTest {
 	}
 	
 	public static void testSearch() {
-		List<Movie> movies = MovieParser.searchMovie("科幻", 100, 1);
+		List<Movie> movies = MovieParser.searchMovie("单机", 100, 1);
 		print(movies);
 	}
 	
