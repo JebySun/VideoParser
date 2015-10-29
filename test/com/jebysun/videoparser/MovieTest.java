@@ -14,9 +14,9 @@ public class MovieTest {
 		
 //		testLastestPublic170();
 //		testLastest();
-		testSearch();
+//		testSearch();
 //		testParseMovie();
-//		testGetDetail();
+		testGetDetail();
 		
 //		testTv();
 	}
@@ -84,12 +84,12 @@ public class MovieTest {
 	}
 	
 	private static void testGetDetail() throws SocketTimeoutException, IOException {
-		String s = SimpleMovieParser.getMovieDetail("http://www.ygdy8.com/html/dongman/haizeiwangqu/20120506/37572.html");
+		String s = SimpleMovieParser.getVideoDetail("http://ygdy8.com/html/gndy/dyzz/20151022/49348.html");
 		List<String> downloads = SimpleMovieParser.getMovieDownloadUrl();
-//		System.out.println(s);
-		for (String sd : downloads) {
-			System.out.println(sd);
-		}
+		System.out.println(s);
+//		for (String sd : downloads) {
+//			System.out.println(sd);
+//		}
 	}
 
 }

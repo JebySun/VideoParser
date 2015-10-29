@@ -187,7 +187,7 @@ public class SimpleMovieParser {
 	}
 	
 	/**
-	 * 根据地址获取视频详细介绍信息
+	 * 根据地址获取电影详细介绍信息
 	 * @param url
 	 * @return
 	 */
@@ -209,6 +209,58 @@ public class SimpleMovieParser {
 			return htmlDetail;
 		}
 		return htmlDetail.substring(htmlDetail.indexOf("<img"));
+	}
+	
+	/**
+	 * 通用视频详情信息获取
+	 * @param url
+	 * @return
+	 * @throws IOException
+	 * @throws SocketTimeoutException
+	 */
+	public static String getVideoDetail(String url) throws IOException, SocketTimeoutException {
+		String htmlDetail = null;
+		doc = Jsoup.connect(url)
+				.timeout(Config.TIMEOUT*1000)
+				.get();
+
+		//调整图片宽度为屏幕宽度，高度自动等比缩放。
+		doc.select("#Zoom img").attr("style", "width:100%; height:auto;");
+		Elements zoom = doc.select("#Zoom");
+		if (zoom.size()==0) {
+			return "获取视频详情失败。<br/>" + url;
+		}
+		htmlDetail = zoom.get(0).html();
+		
+		return dealHTML(htmlDetail);
+	}
+	
+	private static String dealHTML(String html) {
+		String result = null;
+		//处理开头（海报之前）多余的杂乱信息
+		int imgIndex = html.indexOf("<img");
+		if (imgIndex != -1) {
+			result = html.substring(imgIndex);
+		} else {
+			result = html;
+		}
+		
+		//第一次截取，截取到每个页面都包含的下载地址2结束。
+		int endIndex = result.indexOf("<font color=\"red\">下载地址2：");
+		if (endIndex != -1) {
+			result = result.substring(0, endIndex);
+		}
+		
+		//第二次截取，截掉下载地址信息列表
+		int downloadIndex = result.indexOf("下载地址");
+		if (downloadIndex != -1) {
+			result = result.substring(0, downloadIndex);
+		}
+		
+		if (result.endsWith("【") || result.endsWith("[") || result.endsWith("(")) {
+			result = result.substring(0, result.length());
+		}
+		return result;
 	}
 	
 	/**
