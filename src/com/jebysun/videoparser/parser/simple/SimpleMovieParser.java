@@ -235,30 +235,33 @@ public class SimpleMovieParser {
 		return dealHTML(htmlDetail);
 	}
 	
+	/**
+	 * 截取视频详情信息
+	 * @param html
+	 * @return
+	 */
 	private static String dealHTML(String html) {
 		String result = null;
 		//处理开头（海报之前）多余的杂乱信息
-		int imgIndex = html.indexOf("<img");
-		if (imgIndex != -1) {
-			result = html.substring(imgIndex);
+		int index = html.indexOf("<img");
+		if (index != -1) {
+			result = html.substring(index);
 		} else {
 			result = html;
 		}
 		
-		//第一次截取，截取到每个页面都包含的下载地址2结束。
-		int endIndex = result.indexOf("<font color=\"red\">下载地址2：");
-		if (endIndex != -1) {
-			result = result.substring(0, endIndex);
-		}
-		
-		//第二次截取，截掉下载地址信息列表
-		int downloadIndex = result.indexOf("下载地址");
-		if (downloadIndex != -1) {
-			result = result.substring(0, downloadIndex);
-		}
-		
-		if (result.endsWith("【") || result.endsWith("[") || result.endsWith("(")) {
-			result = result.substring(0, result.length());
+		//截掉下载地址信息列表
+		if ((index = result.indexOf("下载地址")) != -1) {
+			result = result.substring(0, index);
+			if (result.endsWith("【") || result.endsWith("[") || result.endsWith("(")) {
+				result = result.substring(0, result.length()-1);
+			}
+		//截掉少部分没有“下载地址关键字”的ftp下载地址
+		} else if ((index = result.indexOf("ftp")) != -1) {
+			result = result.substring(0, index);
+		//终极办法：截取到每个页面都包含的下载地址2结束。
+		} else if ((index = result.indexOf("<font color=\"red\">下载地址2：")) != -1) {
+			result = result.substring(0, index);
 		}
 		return result;
 	}
