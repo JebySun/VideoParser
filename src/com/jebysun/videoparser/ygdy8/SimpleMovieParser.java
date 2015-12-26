@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.parser.simple;
+package com.jebysun.videoparser.ygdy8;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -10,9 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import com.jebysun.videoparser.cfg.Config;
-import com.jebysun.videoparser.entity.Movie;
 
 /**
  * 简单电影解析客户端类

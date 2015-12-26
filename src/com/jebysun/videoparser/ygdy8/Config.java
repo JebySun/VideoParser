@@ -1,15 +1,16 @@
-package com.jebysun.videoparser.cfg;
+package com.jebysun.videoparser.ygdy8;
 
 /**
- * 项目配置
+ * 资源配置
+ * 阳光电影http://www.ygdy8.com
  * @author Jeby Sun
  * @Date 2015-09-01
  */
-public final class Config {
+final class Config {
 	
 	private Config() {}
 	
-	//电影库域名
+	//影视资源域名
 	public static final String DOMAIN = "http://www.ygdy8.com";
 
 	//电影查询路径

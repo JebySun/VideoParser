@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.entity;
+package com.jebysun.videoparser.ygdy8;
 
 import java.util.Date;
 

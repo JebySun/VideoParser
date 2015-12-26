@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.parser;
+package com.jebysun.videoparser.ygdy8;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -12,8 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.jebysun.videoparser.cfg.Config;
-import com.jebysun.videoparser.entity.Movie;
+import com.jebysun.videoparser.ygdy8.Config;
 
 /**
  * 电影解析客户端类
@@ -211,7 +210,6 @@ public class MovieParser {
 	 * @return
 	 */
 	private static Movie fillMovieInfo(Document doc, Movie movie) {
-		String strInfo = null;
 		if (hasSpanTag(doc)) {
 			movie = fillMovieInfoWithSpan(doc, movie);
 		} else {

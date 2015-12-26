@@ -1,12 +1,12 @@
-package com.jebysun.videoparser;
+package com.jebysun.videoparser.ygdy8;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-import com.jebysun.videoparser.entity.Movie;
-import com.jebysun.videoparser.parser.MovieParser;
-import com.jebysun.videoparser.parser.simple.SimpleMovieParser;
+import com.jebysun.videoparser.ygdy8.Movie;
+import com.jebysun.videoparser.ygdy8.MovieParser;
+import com.jebysun.videoparser.ygdy8.SimpleMovieParser;
 
 public class MovieTest {
 

@@ -1,6 +1,7 @@
 package com.jebysun.videoparser.util;
 
-public class AnyUtil {
+public final class AnyUtil {
+	
 	private AnyUtil () {}
 	
 	
