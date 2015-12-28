@@ -14,16 +14,16 @@ final class Config {
 	public static final String DOMAIN = "http://www.80s.la";
 	
 	//电影分类 参数依次为类别，年份，地区，语言，排序，分页序号
-	public static final String MOVIE_PATH = "/movie/list/$category-$year-$area-$language-$sort-$page";
+	public static final String MOVIE_QUERY_PATH = "/movie/list/$category-$year-$area-$language-$sort-$page";
 	
-	//电视剧分类
-	public static final String TV_SERIE_PATH = "/ju/list/------";
+	//电视剧分类 参数依次为类别，年代，地区，排序，分页序号
+	public static final String TV_QUERY_PATH = "/ju/list/$category---$year-$area-$sort-$page";
 	
 	//综艺分类
-	public static final String ZONGYI_PATH = "/zy/list/------";
+	public static final String ZONGYI_QUERY_PATH = "/zy/list/----4-$sort-$page";
 
 	//动漫分类
-	public static final String DONGMAN_PATH = "/dm/list/------";
+	public static final String MANGA_QUERY_PATH = "/dm/list/$type----14-$sort-$page";
 	
 	//影视搜索
 	//POST请求

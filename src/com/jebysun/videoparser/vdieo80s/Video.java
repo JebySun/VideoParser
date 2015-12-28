@@ -10,8 +10,14 @@ import java.util.List;
  */
 public class Video {
 	
+	//视频类别：电影，电视剧，综艺，动漫
+	private String videoType;
+	
 	//视频名称
 	private String name;
+	
+	//别名
+	private String alias;
 
 	//视频备注
 	private String note;
@@ -21,9 +27,7 @@ public class Video {
 	
 	//视频海报地址
 	private String posterUrl;
-	
-	//别名
-	private String alias;
+
 	//导演
 	private String director;
 	//演员
@@ -167,6 +171,23 @@ public class Video {
 	public void addDownloadUrl(String downloadUrl) {
 		this.downlaodUrlList.add(downloadUrl);
 	}
+
+	public String getVideoType() {
+		return videoType;
+	}
+
+	public void setVideoType(String videoType) {
+		this.videoType = videoType;
+	}
+
+	public List<String> getDownlaodUrlList() {
+		return downlaodUrlList;
+	}
+
+	public void setDownlaodUrlList(List<String> downlaodUrlList) {
+		this.downlaodUrlList = downlaodUrlList;
+	}
+
 	
 	
 }
