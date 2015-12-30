@@ -1,12 +1,15 @@
 package com.jebysun.videoparser.video80s;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
-import com.jebysun.videoparser.vdieo80s.Video;
-import com.jebysun.videoparser.vdieo80s.VideoParser;
-import com.jebysun.videoparser.vdieo80s.param.MangaQueryParam;
-import com.jebysun.videoparser.vdieo80s.param.TVQueryParam;
+import com.jebysun.videoparser.video80s.Video;
+import com.jebysun.videoparser.video80s.VideoParser;
+import com.jebysun.videoparser.video80s.param.TVQueryParam;
 
 public class MovieTest {
 
@@ -14,13 +17,27 @@ public class MovieTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		listMoive();
+//		testMoiveList();
 //		testDetail();
 		
-//		testSearch("蜡笔小新");
+//		testSearch("快乐大本营");
 		
 //		testTVlist();
-		testMangalist();
+//		testMangalist();
+		testVarietylist();
+	}
+	
+	
+	private static void testMoiveList() {
+		try {
+			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 1);
+			for (Video v : videoList) {
+				v = VideoParser.getVideoDetail(v.getDetailUrl());
+				printVideo(v);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void testTVlist() {
@@ -38,12 +55,23 @@ public class MovieTest {
 	
 	private static void testMangalist() {
 		try {
-			List<Video> videoList = VideoParser.listManga(MangaQueryParam.TYPE_JUCHANG, null, 1);
+			List<Video> videoList = VideoParser.listManga(null, null, 1);
+			for (Video v : videoList) {
+//				v = VideoParser.getVideoDetail(v.getDetailUrl());
+				printVideo(v);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void testVarietylist() {
+		try {
+			List<Video> videoList = VideoParser.listVariety(null, 1);
 			for (Video v : videoList) {
 				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
 			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,19 +89,6 @@ public class MovieTest {
 		}
 	}
 
-	private static void listMoive() {
-		try {
-//			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 1);
-			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 100);
-			for (Video v : videoList) {
-				v = VideoParser.getVideoDetail(v.getDetailUrl());
-				printVideo(v);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	private static void testDetail() {
 //		String url = "http://www.80s.la/movie/15429";
@@ -84,11 +99,11 @@ public class MovieTest {
 //		String url = "http://www.80s.la/movie/14635";
 		
 		//电视剧_秦时明月
-//		String url = "http://www.80s.la/ju/14030";
+		String url = "http://www.80s.la/ju/14030";
 		//电视剧_芈月传
 //		String url = "http://www.80s.la/ju/15853";
 		
-		String url = "http://www.80s.la/dm/3107";
+//		String url = "http://www.80s.la/ju/16023";
 		
 		//动漫_名侦探柯南 
 //		String url = "http://www.80s.la/dm/3109";
@@ -120,12 +135,21 @@ public class MovieTest {
 		System.out.println("上映日期:"+v.getReleaseDate());
 		System.out.println("豆瓣评分:"+v.getScore());
 		System.out.println("剧情简介:"+v.getStory());
-		
+		System.out.println("视频截图:"+v.getScreenShotUrl());
 		System.out.println("下载地址:");
-		for (String downloadUrl : v.getDownloadUrlList()) {
-			System.out.println(downloadUrl);
-		}
+		printMapByKeySet(v.getDownloadMap());
 	}
+	
+	/**
+	 * 遍历打印Map
+	 * @param map
+	 */
+    public static void printMapByKeySet(Map<String, String> map) {
+    	Set<Entry<String, String>> entrySet = map.entrySet();
+        for (Map.Entry<String, String> entry : entrySet) {  
+            System.out.println(entry.getKey() + "：" + entry.getValue());  
+        }  
+    }
 	
 
 }

@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.vdieo80s;
+package com.jebysun.videoparser.video80s;
 
 /**
  * 资源配置
@@ -20,7 +20,7 @@ final class Config {
 	public static final String TV_QUERY_PATH = "/ju/list/$category---$year-$area-$sort-$page";
 	
 	//综艺分类
-	public static final String ZONGYI_QUERY_PATH = "/zy/list/----4-$sort-$page";
+	public static final String VARIETY_QUERY_PATH = "/zy/list/----4-$sort-$page";
 
 	//动漫分类
 	public static final String MANGA_QUERY_PATH = "/dm/list/$type----14-$sort-$page";

@@ -1,7 +1,7 @@
-package com.jebysun.videoparser.vdieo80s;
+package com.jebysun.videoparser.video80s;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 视频
@@ -27,6 +27,9 @@ public class Video {
 	
 	//视频海报地址
 	private String posterUrl;
+	
+	//视频截图地址
+	private String screenShotUrl;
 
 	//导演
 	private String director;
@@ -47,8 +50,8 @@ public class Video {
 	//剧情简介
 	private String story;
 	
-	//下载地址
-	private List<String> downlaodUrlList = new ArrayList<String>();
+	//下载地址列表
+	private Map<String, String> downloadMap = new LinkedHashMap<String, String>();
 	
 
 
@@ -164,12 +167,12 @@ public class Video {
 		this.story = story;
 	}
 	
-	public List<String> getDownloadUrlList() {
-		return downlaodUrlList;
+	public Map<String, String> getDownloadMap() {
+		return downloadMap;
 	}
 	
-	public void addDownloadUrl(String downloadUrl) {
-		this.downlaodUrlList.add(downloadUrl);
+	public void setDownloadMap(Map<String, String> downloadMap) {
+		this.downloadMap = downloadMap;
 	}
 
 	public String getVideoType() {
@@ -179,15 +182,12 @@ public class Video {
 	public void setVideoType(String videoType) {
 		this.videoType = videoType;
 	}
-
-	public List<String> getDownlaodUrlList() {
-		return downlaodUrlList;
+	public String getScreenShotUrl() {
+		return screenShotUrl;
 	}
 
-	public void setDownlaodUrlList(List<String> downlaodUrlList) {
-		this.downlaodUrlList = downlaodUrlList;
+	public void setScreenShotUrl(String screenShotUrl) {
+		this.screenShotUrl = screenShotUrl;
 	}
-
-	
 	
 }
