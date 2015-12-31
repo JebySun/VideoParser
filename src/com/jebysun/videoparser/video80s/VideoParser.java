@@ -284,7 +284,7 @@ public class VideoParser {
 			String name = e.select(">div>a").get(0).attr("title");
 			String note = e.select("div.zyr a span").get(0).text();
 			String path = e.select(">div>a").get(0).attr("href");
-			String imgUrl = e.select(">div>a>img").get(0).attr("src");
+			String imgUrl = e.select(">div>a>img").get(0).attr("_src");
 			if (imgUrl.lastIndexOf(".")==imgUrl.length()-4) {
 				v.setPosterUrl(imgUrl);
 			}

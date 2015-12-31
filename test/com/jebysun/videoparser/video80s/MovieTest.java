@@ -17,14 +17,14 @@ public class MovieTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		testMoiveList();
+		testMoiveList();
 //		testDetail();
 		
 //		testSearch("快乐大本营");
 		
 //		testTVlist();
 //		testMangalist();
-		testVarietylist();
+//		testVarietylist();
 	}
 	
 	
@@ -69,7 +69,7 @@ public class MovieTest {
 		try {
 			List<Video> videoList = VideoParser.listVariety(null, 1);
 			for (Video v : videoList) {
-				v = VideoParser.getVideoDetail(v.getDetailUrl());
+//				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
 			}
 		} catch (IOException e) {
