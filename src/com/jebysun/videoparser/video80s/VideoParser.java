@@ -442,6 +442,9 @@ public class VideoParser {
 			v.setDetailUrl(Config.DOMAIN+path);
 			v.setPosterUrl(imgUrl.lastIndexOf(".")==(imgUrl.length()-4) ? imgUrl : null);
 			v.setVideoType(getVideoType(path));
+			if (v.getVideoType().equals(VideoType.OTHER)) {
+				continue;
+			}
 			videos.add(v);
 		}
 		return videos;
@@ -476,7 +479,7 @@ public class VideoParser {
 		} else if (url.startsWith("/dm/")) {
 			return VideoType.DM;
 		}
-		return "";
+		return VideoType.OTHER;
 	}
 	
 	

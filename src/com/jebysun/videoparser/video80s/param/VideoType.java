@@ -17,5 +17,6 @@ public final class VideoType {
 	public static String ZY = "zongyi";
 	//动漫
 	public static String DM = "dongman";
-
+	//其他
+	public static String OTHER = "other";
 }
