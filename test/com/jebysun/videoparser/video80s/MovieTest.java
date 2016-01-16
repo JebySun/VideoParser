@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import com.jebysun.videoparser.video80s.Video;
 import com.jebysun.videoparser.video80s.VideoParser;
 import com.jebysun.videoparser.video80s.param.TVQueryParam;
@@ -15,12 +18,13 @@ public class MovieTest {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
-		testMoiveList();
+	public static void main(String[] args) throws IOException {
+//		testMoiveList();
 //		testDetail();
 		
-//		testSearch("快乐大本营");
+		testSearch("死的的");
 		
 //		testTVlist();
 //		testMangalist();
@@ -81,7 +85,7 @@ public class MovieTest {
 		try {
 			List<Video> videoList = VideoParser.searchVideo(keyword);
 			for (Video v : videoList) {
-				v = VideoParser.getVideoDetail(v.getDetailUrl());
+//				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
 			}
 		} catch (IOException e) {

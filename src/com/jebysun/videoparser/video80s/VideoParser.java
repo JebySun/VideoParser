@@ -431,6 +431,11 @@ public class VideoParser {
 		List<Video> videos = new ArrayList<Video>();
 		Video v = null;
 		Elements elements = doc.select("ul.me1.clearfix>li");
+		//判断是不是没有搜索结果
+		Elements isEmptyResultElemts = doc.select("div.nomoviesinfo");
+		if (isEmptyResultElemts.size() != 0) {
+			return videos;
+		}
 		for (Element e : elements) {
 			v = new Video();
 			String name = e.select("a").get(0).attr("title");
