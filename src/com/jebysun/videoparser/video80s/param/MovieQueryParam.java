@@ -18,8 +18,8 @@ public final class MovieQueryParam {
 	public static final String CATEGORY_QIHUAN = "8";
 	public static final String CATEGORY_ZHANZHENG = "9";
 	public static final String CATEGORY_FANZUI = "a";
-	public static final String CATEGORY_JINGSHU = "b";
-	public static final String CATEGORY_DONGHUA = "c";
+	public static final String CATEGORY_JINGSONG = "b";
+	public static final String CATEGORY_DONGMAN= "c";
 	public static final String CATEGORY_LUNLI = "d";
 	public static final String CATEGORY_JUQING = "f";
 	public static final String CATEGORY_MAOXIAN = "h";
