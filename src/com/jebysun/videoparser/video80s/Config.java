@@ -11,7 +11,7 @@ final class Config {
 	private Config() {}
 	
 	//影视资源域名
-	public static final String DOMAIN = "http://www.80s.la";
+	public static final String DOMAIN = "http://www.80s.tw";
 	
 	//电影分类 参数依次为类别，年份，地区，语言，排序，分页序号
 	public static final String MOVIE_QUERY_PATH = "/movie/list/$category-$year-$area-$language-$sort-$page";

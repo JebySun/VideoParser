@@ -24,7 +24,7 @@ public class MovieTest {
 //		testMoiveList();
 //		testDetail();
 		
-		testSearch("死的的");
+//		testSearch("死的");
 		
 //		testTVlist();
 //		testMangalist();
