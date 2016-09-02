@@ -13,10 +13,10 @@ public class MovieTest {
 	public static void main(String[] args) throws SocketTimeoutException, IOException {
 		
 //		testLastestPublic170();
-//		testLastest();
+		testLastest();
 //		testSearch();
 //		testParseMovie();
-		testGetDetail();
+//		testGetDetail();
 		
 //		testTv();
 	}

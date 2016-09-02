@@ -1,17 +1,11 @@
 package com.jebysun.videoparser.video80s;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import com.jebysun.videoparser.video80s.Video;
-import com.jebysun.videoparser.video80s.VideoParser;
 import com.jebysun.videoparser.video80s.param.TVQueryParam;
 
 public class MovieTest {
@@ -21,7 +15,7 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-//		testMoiveList();
+		testMoiveList();
 //		testDetail();
 		
 //		testSearch("死的");
@@ -36,8 +30,11 @@ public class MovieTest {
 		try {
 			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 1);
 			for (Video v : videoList) {
-				v = VideoParser.getVideoDetail(v.getDetailUrl());
-				printVideo(v);
+//				v = VideoParser.getVideoDetail(v.getDetailUrl());
+//				printVideo(v);
+				System.out.println(v.getName());
+				System.out.println(v.getPosterUrl());
+				System.out.println(v.getNote());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

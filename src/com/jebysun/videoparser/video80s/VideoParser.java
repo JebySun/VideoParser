@@ -430,7 +430,7 @@ public class VideoParser {
 	private static List<Video> parserSimpleVideoList(Document doc) {
 		List<Video> videos = new ArrayList<Video>();
 		Video v = null;
-		Elements elements = doc.select("ul.me1.clearfix>li");
+		Elements elements = doc.select("ul.me1>li");
 		//判断是不是没有搜索结果
 		Elements isEmptyResultElemts = doc.select("div.nomoviesinfo");
 		if (isEmptyResultElemts.size() != 0) {
@@ -438,14 +438,17 @@ public class VideoParser {
 		}
 		for (Element e : elements) {
 			v = new Video();
-			String name = e.select("a").get(0).attr("title");
+			String name = e.select("a>img").get(0).attr("alt");
 			String note = e.select("span.tip").get(0).text();
 			String path = e.select("a").get(0).attr("href");
 			String imgUrl = e.select("a>img").get(0).attr("_src");
+			String score = e.select("a>span.poster_score").get(0).text();
+			
 			v.setName(name);
 			v.setNote(note);
+			v.setScore(score);
 			v.setDetailUrl(Config.DOMAIN+path);
-			v.setPosterUrl(imgUrl.lastIndexOf(".")==(imgUrl.length()-4) ? imgUrl : null);
+			v.setPosterUrl(imgUrl.lastIndexOf("!")==(imgUrl.length()-5) ? imgUrl.substring(0, imgUrl.lastIndexOf("!")) : null);
 			v.setVideoType(getVideoType(path));
 			if (v.getVideoType().equals(VideoType.OTHER)) {
 				continue;
