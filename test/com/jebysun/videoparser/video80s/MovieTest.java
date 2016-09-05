@@ -15,7 +15,8 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		testMoiveList();
+		testHDPost();
+//		testMoiveList();
 //		testDetail();
 		
 //		testSearch("死的");
@@ -23,6 +24,12 @@ public class MovieTest {
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
+	}
+	
+	
+	private static void testHDPost() {
+		String s = PostImageParser.getHDPostImageUrl("魔兽");
+		System.out.println(s);
 	}
 	
 	
