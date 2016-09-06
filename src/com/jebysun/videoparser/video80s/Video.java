@@ -28,6 +28,9 @@ public class Video {
 	//视频海报地址
 	private String posterUrl;
 	
+	//高清海报地址
+	private String hdPosterUrl;
+	
 	//视频截图地址
 	private String screenShotUrl;
 
@@ -189,5 +192,21 @@ public class Video {
 	public void setScreenShotUrl(String screenShotUrl) {
 		this.screenShotUrl = screenShotUrl;
 	}
+
+	public String getHdPosterUrl() {
+		return hdPosterUrl;
+	}
+
+	public void setHdPosterUrl(String hdPosterUrl) {
+		this.hdPosterUrl = hdPosterUrl;
+	}
+	
 	
 }
+
+
+
+
+
+
+

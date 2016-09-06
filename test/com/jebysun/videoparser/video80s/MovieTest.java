@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.jebysun.videoparser.video80s.VideoParseClient.MovieCallBack;
 import com.jebysun.videoparser.video80s.param.TVQueryParam;
 
 public class MovieTest {
@@ -15,7 +16,8 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		testHDPost();
+		testVideoClient();
+//		testHDPost();
 //		testMoiveList();
 //		testDetail();
 		
@@ -24,6 +26,24 @@ public class MovieTest {
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
+	}
+	
+	public static void testVideoClient() {
+		VideoParseClient client = new VideoParseClient();
+		client.listMovieWithHDPoster(3, new MovieCallBack() {
+
+			@Override
+			public void onSuccess(List<Video> videoList) {
+				System.out.println(videoList.size());
+				for (Video v : videoList) {
+					System.out.println("==========="+v.getName());
+					System.out.println(v.getNote());
+					System.out.println(v.getScore());
+					System.out.println(v.getHdPosterUrl()!=null ? v.getHdPosterUrl() : v.getPosterUrl());
+				}
+			}
+			
+		});
 	}
 	
 	
@@ -37,11 +57,10 @@ public class MovieTest {
 		try {
 			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 1);
 			for (Video v : videoList) {
-//				v = VideoParser.getVideoDetail(v.getDetailUrl());
-//				printVideo(v);
-				System.out.println(v.getName());
+				System.out.println("==========="+v.getName());
 				System.out.println(v.getPosterUrl());
 				System.out.println(v.getNote());
+				System.out.println(v.getScore());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
