@@ -36,7 +36,7 @@ public class VideoParseClient {
 								.replaceFirst("\\[", "")
 								.replaceFirst("\\]", "");
 						//设置高清海报地址
-						v.setHdPosterUrl(PostImageParser.getHDPostImageUrl(keyName));
+						v.setHdPosterUrl(PostImageParser.parseHDPostImageUrl(keyName));
 						
 						finishedCount++;
 						if (finishedCount == videoList.size()) {

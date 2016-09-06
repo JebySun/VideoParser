@@ -19,7 +19,7 @@ public class PostImageParser {
 	/**
 	 * 获取高清海报地址
 	 */
-	public static String getHDPostImageUrl(String videoName) {
+	public static String parseHDPostImageUrl(String videoName) {
 		String hdPostImgUrl = null;
 		String queryUrl = "https://movie.douban.com/subject_search?search_text=";
 		queryUrl += videoName;

@@ -48,7 +48,7 @@ public class MovieTest {
 	
 	
 	private static void testHDPost() {
-		String s = PostImageParser.getHDPostImageUrl("魔兽");
+		String s = PostImageParser.parseHDPostImageUrl("魔兽");
 		System.out.println(s);
 	}
 	
