@@ -33,6 +33,8 @@ public class VideoParseClient {
 					public void run() {
 						String keyName = v.getName()
 								.replaceFirst("DVD版", "")
+								.replaceFirst("抢先版", "")
+								.replaceFirst("枪版", "")
 								.replaceFirst("\\[", "")
 								.replaceFirst("\\]", "");
 						//设置高清海报地址
