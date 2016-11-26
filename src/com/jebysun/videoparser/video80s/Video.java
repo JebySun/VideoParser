@@ -1,5 +1,6 @@
 package com.jebysun.videoparser.video80s;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -8,8 +9,9 @@ import java.util.Map;
  * @author Jeby Sun
  * @Date 2015-12-24
  */
-public class Video {
-	
+public class Video implements Serializable {
+	private static final long serialVersionUID = -2764906880573396559L;
+
 	//视频类别：电影，电视剧，综艺，动漫
 	private String videoType;
 	
