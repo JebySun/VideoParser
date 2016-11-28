@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s.param;
+package com.jebysun.videoparser.tw80s.param;
 
 /**
  * 视频查询结果排序方式

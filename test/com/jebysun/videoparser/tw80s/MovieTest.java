@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s;
+package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,8 +6,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.jebysun.videoparser.video80s.VideoParseClient.MovieCallBack;
-import com.jebysun.videoparser.video80s.param.TVQueryParam;
+import com.jebysun.videoparser.tw80s.PostImageParser;
+import com.jebysun.videoparser.tw80s.Video;
+import com.jebysun.videoparser.tw80s.VideoParseClient;
+import com.jebysun.videoparser.tw80s.VideoParser;
+import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
+import com.jebysun.videoparser.tw80s.param.TVQueryParam;
 
 public class MovieTest {
 
@@ -16,14 +20,14 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		testVideoClient();
+//		testVideoClient();
 //		testHDPost();
 //		testMoiveList();
 //		testDetail();
 		
 //		testSearch("死的");
 		
-//		testTVlist();
+		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 	}
@@ -69,9 +73,9 @@ public class MovieTest {
 	
 	private static void testTVlist() {
 		try {
-			List<Video> videoList = VideoParser.listTV(TVQueryParam.CATEGORY_DUSHI, TVQueryParam.AREA_RIHANJU, null, null, 1);
+			List<Video> videoList = VideoParser.listTV(null, null, null, null, 1);
 			for (Video v : videoList) {
-				v = VideoParser.getVideoDetail(v.getDetailUrl());
+//				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
 			}
 

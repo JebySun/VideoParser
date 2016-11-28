@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.util;
+package com.jebysun.videoparser.utils;
 
 public final class JavaUtil {
 	

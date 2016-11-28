@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s;
+package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.jebysun.videoparser.util.JavaUtil;
+import com.jebysun.videoparser.utils.JavaUtil;
 
 /**
  * 高清海报解析

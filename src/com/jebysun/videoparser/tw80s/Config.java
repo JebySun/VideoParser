@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s;
+package com.jebysun.videoparser.tw80s;
 
 /**
  * 资源配置

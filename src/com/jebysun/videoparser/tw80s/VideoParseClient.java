@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s;
+package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.List;

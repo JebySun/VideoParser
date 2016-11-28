@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s.param;
+package com.jebysun.videoparser.tw80s.param;
 
 /**
  * 动漫查询参数

@@ -1,4 +1,4 @@
-package com.jebysun.videoparser.video80s;
+package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.jebysun.videoparser.video80s.param.VideoType;
+import com.jebysun.videoparser.tw80s.param.VideoType;
+
 /**
  * 80s视频资源解析
  * @author Jeby Sun
@@ -49,6 +50,8 @@ public class VideoParser {
 	 * @throws IOException
 	 */
 	public static List<Video> listTV(String category, String area, String year, String sort, int pageIndex) throws IOException {
+		//地区默认全部需要设置地区参数为0
+		area = area==null ? "0" : area;
 		return listTV(category, area, year, sort, "p"+pageIndex);
 	}
 	
@@ -235,6 +238,7 @@ public class VideoParser {
 		param.put("pageIndex", pageIndex);
 		String queryUrl = buildQueryUrl(Config.TV_QUERY_PATH, param);
 		String url = Config.DOMAIN + queryUrl;
+		System.out.println(url);
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
 		return parserSimpleVideoList(doc);
 	}
