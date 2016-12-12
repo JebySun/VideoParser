@@ -11,7 +11,6 @@ import com.jebysun.videoparser.tw80s.Video;
 import com.jebysun.videoparser.tw80s.VideoParseClient;
 import com.jebysun.videoparser.tw80s.VideoParser;
 import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
-import com.jebysun.videoparser.tw80s.param.TVQueryParam;
 
 public class MovieTest {
 
@@ -20,14 +19,14 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
+//		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-//		testMoiveList();
 //		testDetail();
 		
-//		testSearch("死的");
+		testSearch("死的");
 		
-		testTVlist();
+//		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 	}
@@ -61,10 +60,11 @@ public class MovieTest {
 		try {
 			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 1);
 			for (Video v : videoList) {
-				System.out.println("==========="+v.getName());
+				System.out.println(v.getName());
 				System.out.println(v.getPosterUrl());
 				System.out.println(v.getNote());
 				System.out.println(v.getScore());
+				System.out.println(v.getDetailUrl());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -122,23 +122,10 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-//		String url = "http://www.80s.la/movie/15429";
-//		String url = "http://www.80s.la/movie/15728";
-//		String url = "http://www.80s.la/movie/15991";
-//		String url = "http://www.80s.la/movie/585";
-//		String url = "http://www.80s.la/movie/15993";
-//		String url = "http://www.80s.la/movie/14635";
-		
-		//电视剧_秦时明月
-		String url = "http://www.80s.la/ju/14030";
-		//电视剧_芈月传
-//		String url = "http://www.80s.la/ju/15853";
-		
-//		String url = "http://www.80s.la/ju/16023";
-		
-		//动漫_名侦探柯南 
-//		String url = "http://www.80s.la/dm/3109";
-//		String url = "http://www.80s.la/dm/3107";
+//		String url = "http://www.80s.tw/movie/19356";
+//		String url = "http://www.80s.tw/movie/18728";
+//		String url = "http://www.80s.tw/movie/19239";
+		String url = "http://www.80s.tw/movie/19239";
 		try {
 			Video v = VideoParser.getVideoDetail(url);
 			printVideo(v);

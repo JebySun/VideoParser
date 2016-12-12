@@ -62,10 +62,12 @@ public final class MovieQueryParam {
 	//语言
 	public static final String LANGUAGE_CHINESE = "1";
 	public static final String LANGUAGE_ENGLISH = "2";
+	// 韩语
 	public static final String LANGUAGE_KOREAN = "3";
 	public static final String LANGUAGE_JAPANESE = "4";
 	public static final String LANGUAGE_FRENCE = "5";
 	public static final String LANGUAGE_OTHER = "6";
+	// 粤语
 	public static final String LANGUAGE_CANTONESE = "7";
 	
 	//年份
@@ -75,9 +77,14 @@ public final class MovieQueryParam {
 	public static final String YEAR_2013 = "2013";
 	public static final String YEAR_2012 = "2012";
 	public static final String YEAR_2011 = "2011";
-	public static final String YEAR_2000_2010 = "2000_2010";
-	public static final String YEAR_1990_1999 = "1990_1999";
-	public static final String YEAR_1900_1989 = "1900_1989";
+	public static final String YEAR_2010 = "2010";
+	public static final String YEAR_2009 = "2009";
+	public static final String YEAR_2008 = "2008";
+	public static final String YEAR_2007 = "2007";
+	public static final String YEAR_2006 = "2006";
+	public static final String YEAR_2005 = "2005";
+	//2004及以前
+	public static final String YEAR_2004 = "2004";
 	
 	
 }

@@ -14,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.jebysun.videoparser.tw80s.param.VideoType;
+import com.jebysun.videoparser.tw80s.utils.Tw80sUtil;
 
 /**
  * 80s视频资源解析
@@ -124,9 +125,21 @@ public class VideoParser {
 			String noteText = doc.select("div.info>span").get(0).ownText();
 			v.setNote(noteText);
 		} else {
-			Elements noteElems = doc.select("div.info span.tip");
-			String note = noteElems.size()==0 ? null : noteElems.get(0).text();
-			v.setNote(note);
+			Element noteNode = doc.select("div.info>span").get(0);
+			if (noteNode.children().size() == 0 && !Tw80sUtil.isEmptyString(noteNode.text())) {
+				v.setNote(noteNode.text());
+			}
+			
+		}
+		
+		
+		//又名, 演员
+		Elements eles = doc.select("div.info>span");
+		for (Element e : eles) {
+			String[] sArr = e.text().split("：", 2);
+			if (sArr.length==2) {
+				v = fillBaseInfo(v, sArr);
+			}
 		}
 		
 		//基本信息
@@ -140,22 +153,27 @@ public class VideoParser {
 		}
 		
 		//影片评分
-		Element scoreNode = doc.select("div.info div:nth-child(1)").get(0);
+		Element scoreNode = doc.select("div.info span.score").get(0).parent();
 		String scoreInfo = scoreNode.text();
 		if (scoreInfo.startsWith("豆瓣评分")) {
 			v.setScore(scoreInfo.split("：")[1].trim());
 		}
 			
 		//影片简介
-		Element storyNode = doc.select("div.info div.clearfix").get(1);
+		Elements storyNodes = doc.select("#movie_content_all");
+		Element storyNode = storyNodes.size()==1 ? storyNodes.get(0) : null;
+		if (storyNode == null) {
+			storyNode = doc.select("div#movie_content").get(0);
+		}
 		//移除“剧情介绍”标题
-		storyNode.select(">p>span").get(0).remove();
-		String story = storyNode.select(">p").get(0).text().replaceAll("　", "").trim();
+		storyNode.select("span").get(0).remove();
+		String story = storyNode.text().replaceAll("　", "").trim();
 		v.setStory(story);
 		
 		//下载地址
 		Elements tNodes = doc.select("ul.dllist1>li:not(.nohover)>div");
-		if (tNodes.size()!=0) {
+		//收起的下载地址，比如电视剧，动漫，综艺
+		if (tNodes.size() != 0) {
 			String downloadPageUrl = getDownloadPageUrl(url, tNodes.get(0));
 			Map<String, String> downloadMap = getAllDownloadUrl(downloadPageUrl);
 			v.setDownloadMap(downloadMap);
@@ -381,7 +399,7 @@ public class VideoParser {
 		Elements urlNodes = doc.select("ul.dllist1>li:not(.nohover)");
 		//下载地址序列反转，网页上的下载地址最近更新的排在前面，这里我们从最后面开始解析
 		for (int i=urlNodes.size()-1; i>=0; i--) {
-			Element node = urlNodes.get(i).select("span.dlname>span>a").get(0);
+			Element node = urlNodes.get(i).select("span.xunlei>a").get(0);
 			String downloadTitle = node.attr("thunderrestitle");
 			String downloadUrl = node.attr("href");
 			downloadMap.put(downloadTitle, downloadUrl);
@@ -442,17 +460,25 @@ public class VideoParser {
 		}
 		for (Element e : elements) {
 			v = new Video();
-			String name = e.select("a>img").get(0).attr("alt");
-			String note = e.select("span.tip").get(0).text();
-			String path = e.select("a").get(0).attr("href");
-			String imgUrl = e.select("a>img").get(0).attr("_src");
-			String score = e.select("a>span.poster_score").get(0).text();
 			
+			Elements scoreNodes = e.select("a>span.poster_score");
+			Elements noteNodes = e.select("span.tip");
+			Elements imageNodes = e.select("a>img");
+			if (scoreNodes.size() != 0) {
+				v.setScore(scoreNodes.get(0).text());
+			}
+			if (noteNodes.size() != 0) {
+				v.setNote(noteNodes.get(0).text());
+			}
+			if (imageNodes.size() != 0) {
+				String imgPath = imageNodes.get(0).attr("_src");
+				v.setPosterUrl(imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null);
+			}
+			
+			String name = e.select("a>img").get(0).attr("alt");
+			String path = e.select("a").get(0).attr("href");
 			v.setName(name);
-			v.setNote(note);
-			v.setScore(score);
 			v.setDetailUrl(Config.DOMAIN+path);
-			v.setPosterUrl(imgUrl.lastIndexOf("!")==(imgUrl.length()-5) ? imgUrl.substring(0, imgUrl.lastIndexOf("!")) : null);
 			v.setVideoType(getVideoType(path));
 			if (v.getVideoType().equals(VideoType.OTHER)) {
 				continue;
