@@ -2,15 +2,13 @@ package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.jebysun.videoparser.tw80s.PostImageParser;
-import com.jebysun.videoparser.tw80s.Video;
 import com.jebysun.videoparser.tw80s.VideoParseClient;
 import com.jebysun.videoparser.tw80s.VideoParser;
 import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
+import com.jebysun.videoparser.tw80s.model.DownloadInfo;
+import com.jebysun.videoparser.tw80s.model.Video;
 
 public class MovieTest {
 
@@ -22,9 +20,9 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-//		testDetail();
+		testDetail();
 		
-		testSearch("死的");
+//		testSearch("死的");
 		
 //		testTVlist();
 //		testMangalist();
@@ -122,10 +120,10 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-//		String url = "http://www.80s.tw/movie/19356";
+//		String url = "http://www.80s.tw/movie/19412";
 //		String url = "http://www.80s.tw/movie/18728";
-//		String url = "http://www.80s.tw/movie/19239";
 		String url = "http://www.80s.tw/movie/19239";
+//		String url = "http://www.80s.tw/ju/19249";
 		try {
 			Video v = VideoParser.getVideoDetail(url);
 			printVideo(v);
@@ -154,18 +152,19 @@ public class MovieTest {
 		System.out.println("豆瓣评分:"+v.getScore());
 		System.out.println("剧情简介:"+v.getStory());
 		System.out.println("视频截图:"+v.getScreenShotUrl());
-		System.out.println("下载地址:");
-		printMapByKeySet(v.getDownloadMap());
+		System.out.println("=====下载信息");
+		printMapByKeySet(v.getDownloadInfoList());
 	}
 	
 	/**
 	 * 遍历打印Map
 	 * @param map
 	 */
-    public static void printMapByKeySet(Map<String, String> map) {
-    	Set<Entry<String, String>> entrySet = map.entrySet();
-        for (Map.Entry<String, String> entry : entrySet) {  
-            System.out.println(entry.getKey() + "：" + entry.getValue());  
+    public static void printMapByKeySet(List<DownloadInfo> downloadInfoList) {
+        for (DownloadInfo download : downloadInfoList) {  
+            System.out.println("下载标题：" + download.getTitle());  
+            System.out.println("文件大小：" + download.getFileSize());  
+            System.out.println("下载地址：" + download.getDownloadUrl());  
         }  
     }
 	

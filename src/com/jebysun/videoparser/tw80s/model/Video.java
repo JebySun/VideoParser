@@ -1,7 +1,9 @@
-package com.jebysun.videoparser.tw80s;
+package com.jebysun.videoparser.tw80s.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +49,7 @@ public class Video implements Serializable {
 	//语言
 	private String language;
 	//上映日期
-	private String  releaseDate;
+	private String releaseDate;
 	//影片时长
 	private String duration;
 	//评分
@@ -55,8 +57,8 @@ public class Video implements Serializable {
 	//剧情简介
 	private String story;
 	
-	//下载地址列表
-	private Map<String, String> downloadMap = new LinkedHashMap<String, String>();
+	//下载地址信息列表
+	private List<DownloadInfo> downloadInfoList = new ArrayList<DownloadInfo>();
 	
 
 
@@ -172,12 +174,13 @@ public class Video implements Serializable {
 		this.story = story;
 	}
 	
-	public Map<String, String> getDownloadMap() {
-		return downloadMap;
+
+	public List<DownloadInfo> getDownloadInfoList() {
+		return downloadInfoList;
 	}
-	
-	public void setDownloadMap(Map<String, String> downloadMap) {
-		this.downloadMap = downloadMap;
+
+	public void setDownloadInfoList(List<DownloadInfo> downloadInfoList) {
+		this.downloadInfoList = downloadInfoList;
 	}
 
 	public String getVideoType() {

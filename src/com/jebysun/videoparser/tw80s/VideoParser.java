@@ -3,7 +3,6 @@ package com.jebysun.videoparser.tw80s;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +12,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.jebysun.videoparser.tw80s.model.DownloadInfo;
+import com.jebysun.videoparser.tw80s.model.Video;
 import com.jebysun.videoparser.tw80s.param.VideoType;
 import com.jebysun.videoparser.tw80s.utils.Tw80sUtil;
 
@@ -104,10 +105,14 @@ public class VideoParser {
 		//电影海报
 		Element imgElement = doc.select("div#minfo>div.img>img").get(0);
 		String name = imgElement.attr("title");
-		String imgUrl = imgElement.attr("src");
+		String imgPosterUrl = imgElement.attr("src");
 		v.setName(name);
-		if (imgUrl.lastIndexOf(".")==imgUrl.length()-4) {
-			v.setPosterUrl(imgUrl);
+		
+		if (imgPosterUrl !=null && !imgPosterUrl.startsWith("http")) {
+			imgPosterUrl = "http:" + imgPosterUrl;
+			if (imgPosterUrl.lastIndexOf(".")==imgPosterUrl.length()-4) {
+				v.setPosterUrl(imgPosterUrl);
+			}
 		}
 		
 		//视频截图
@@ -116,6 +121,9 @@ public class VideoParser {
 			Elements screenShotImgElmts = screenShotH2Elmts.get(0).parent().select(">img");
 			if (!screenShotImgElmts.isEmpty()) {
 				String screenShotUrl = screenShotImgElmts.get(0).attr("_src");
+				if (screenShotUrl !=null && !screenShotUrl.startsWith("http")) {
+					screenShotUrl = "http:" + screenShotUrl;
+				}
 				v.setScreenShotUrl(screenShotUrl);
 			}
 		}
@@ -172,14 +180,13 @@ public class VideoParser {
 		
 		//下载地址
 		Elements tNodes = doc.select("ul.dllist1>li:not(.nohover)>div");
-		//收起的下载地址，比如电视剧，动漫，综艺
+		//收起的下载地址，比如电视剧，动漫，综艺的剧集下载地址可能很多
 		if (tNodes.size() != 0) {
-			String downloadPageUrl = getDownloadPageUrl(url, tNodes.get(0));
-			Map<String, String> downloadMap = getAllDownloadUrl(downloadPageUrl);
-			v.setDownloadMap(downloadMap);
+//			String downloadPageUrl = getDownloadPageUrl(url, tNodes.get(0));
+//			Map<String, String> downloadMap = getAllDownloadUrl(downloadPageUrl);
+//			v.setDownloadMap(downloadMap);
 		} else {
-			Map<String, String> downloadMap = parseDownloadUrl(doc);
-			v.setDownloadMap(downloadMap);
+			v.setDownloadInfoList(parseDownloadUrl(doc));
 		}
 		return v;
 	}
@@ -394,17 +401,33 @@ public class VideoParser {
 	 * @param doc
 	 * @return
 	 */
-	private static Map<String, String> parseDownloadUrl(Document doc) {
-		Map<String, String> downloadMap = new LinkedHashMap<String, String>();
+	private static List<DownloadInfo> parseDownloadUrl(Document doc) {
+		List<DownloadInfo> downloadInfoList = new ArrayList<DownloadInfo>();
 		Elements urlNodes = doc.select("ul.dllist1>li:not(.nohover)");
+		DownloadInfo downloadInfo = null;
 		//下载地址序列反转，网页上的下载地址最近更新的排在前面，这里我们从最后面开始解析
 		for (int i=urlNodes.size()-1; i>=0; i--) {
-			Element node = urlNodes.get(i).select("span.xunlei>a").get(0);
-			String downloadTitle = node.attr("thunderrestitle");
-			String downloadUrl = node.attr("href");
-			downloadMap.put(downloadTitle, downloadUrl);
+			downloadInfo = new DownloadInfo();
+			
+			Element fileSizeNode = urlNodes.get(i).select("span.nm>span").get(0);
+			Element downloadLinkNode = urlNodes.get(i).select("span.xunlei>a").get(0);
+			
+			String downloadFileSize = fileSizeNode.ownText();
+			//去除不可见字符（此空白字符串从源拷贝而来）
+			downloadFileSize = downloadFileSize.replaceAll("      ", "");
+			String downloadTitle = downloadLinkNode.attr("thunderrestitle");
+			String downloadUrl = downloadLinkNode.attr("href");
+			
+//			System.out.println("标题："+ downloadTitle);
+//			System.out.println("文件大小："+ downloadUrl);
+//			System.out.println("下载地址："+ downloadFileSize);
+			
+			downloadInfo.setTitle(downloadTitle);
+			downloadInfo.setFileSize(downloadFileSize);
+			downloadInfo.setDownloadUrl(downloadUrl);
+			downloadInfoList.add(downloadInfo);
 		}
-		return downloadMap;
+		return downloadInfoList;
 	}
 	
 	/**
@@ -413,15 +436,15 @@ public class VideoParser {
 	 * @return
 	 * @throws IOException
 	 */
-	private static Map<String, String> getAllDownloadUrl(String downloadPageUrl) throws IOException {
-		
-		Document doc = Jsoup.connect(downloadPageUrl)
-				.timeout(Config.TIMEOUT * 1000)
-				.maxBodySize(1024*1024*2) //2M 设置网页内容最大容量
-				.get();
-		
-		return parseDownloadUrl(doc);
-	}
+//	private static Map<String, String> getAllDownloadUrl(String downloadPageUrl) throws IOException {
+//		
+//		Document doc = Jsoup.connect(downloadPageUrl)
+//				.timeout(Config.TIMEOUT * 1000)
+//				.maxBodySize(1024*1024*2) //2M 设置网页内容最大容量
+//				.get();
+//		
+//		return parseDownloadUrl(doc);
+//	}
 	
 	/**
 	 * 通过Jsoup获取html文本文档
@@ -471,8 +494,13 @@ public class VideoParser {
 				v.setNote(noteNodes.get(0).text());
 			}
 			if (imageNodes.size() != 0) {
+				//e.g: //t.dyxz.la/upload/img/201612/poster_20161213_2146695_b.jpg!list
 				String imgPath = imageNodes.get(0).attr("_src");
-				v.setPosterUrl(imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null);
+				imgPath = imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null;
+				if (imgPath !=null && !imgPath.startsWith("http")) {
+					imgPath = "http:" + imgPath;
+				}
+				v.setPosterUrl(imgPath);
 			}
 			
 			String name = e.select("a>img").get(0).attr("alt");

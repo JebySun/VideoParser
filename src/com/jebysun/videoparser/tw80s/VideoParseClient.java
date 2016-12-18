@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.jebysun.videoparser.tw80s.model.Video;
+
 public class VideoParseClient {
 	
 	private int finishedCount = 0;

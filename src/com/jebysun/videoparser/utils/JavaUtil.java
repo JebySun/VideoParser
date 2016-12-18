@@ -30,5 +30,17 @@ public final class JavaUtil {
 		return contentStr.replaceAll(" ", "").contains(keyStr.replaceAll(" ", ""));
 	}
 	
+	/**
+     * 判断字符串是否为null, "", "       "
+     * @param string
+     * @return
+     */
+    public static boolean isEmptyString(String string) {
+        if (string == null) {
+            return true;
+        }
+        return string.trim().length()==0;
+    }
+	
 	
 }
