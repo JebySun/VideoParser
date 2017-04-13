@@ -38,7 +38,7 @@ public class VideoParser {
 	 * @throws IOException
 	 */
 	public static List<Video> listMovie(String category, String area, String language, String year, String sort, int pageIndex) throws IOException {
-		return listMovie(category, area, language, year, sort, "p"+pageIndex);
+		return listMovie(category, area, language, year, sort, "p" + pageIndex);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class VideoParser {
 	public static List<Video> listTV(String category, String area, String year, String sort, int pageIndex) throws IOException {
 		//地区默认全部需要设置地区参数为0
 		area = area==null ? "0" : area;
-		return listTV(category, area, year, sort, "p"+pageIndex);
+		return listTV(category, area, year, sort, "p" + pageIndex);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class VideoParser {
 	 * @throws IOException
 	 */
 	public static List<Video> listManga(String type, String sort, int pageIndex) throws IOException {
-		return listManga(type, sort, "p"+pageIndex);
+		return listManga(type, sort, "p" + pageIndex);
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public class VideoParser {
 	 * @author Jeby Sun
 	 */
 	public static List<Video> listVariety(String sort, int pageIndex) throws IOException {
-		return listVariety(sort, "p"+pageIndex);
+		return listVariety(sort, "p" + pageIndex);
 	}
 	
 

@@ -6,7 +6,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.jebysun.videoparser.tw80s.model.Video;
-
+/**
+ * 获取豆瓣高清海报
+ * 原理：使用影视名称搜索豆瓣电影，获取海报。海报匹配准确率并不是100%。
+ * @author Jeby Sun
+ *
+ */
 public class VideoParseClient {
 	
 	private int finishedCount = 0;
