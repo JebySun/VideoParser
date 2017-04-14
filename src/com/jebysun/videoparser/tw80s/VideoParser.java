@@ -15,7 +15,7 @@ import org.jsoup.select.Elements;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.Video;
 import com.jebysun.videoparser.tw80s.param.VideoType;
-import com.jebysun.videoparser.tw80s.utils.Tw80sUtil;
+import com.jebysun.videoparser.tw80s.util.Tw80sUtil;
 
 /**
  * 80s视频资源解析
@@ -161,10 +161,24 @@ public class VideoParser {
 		}
 		
 		//影片评分
-		Element scoreNode = doc.select("div.info span.score").get(0).parent();
-		String scoreInfo = scoreNode.text();
-		if (scoreInfo.startsWith("豆瓣评分")) {
-			v.setScore(scoreInfo.split("：")[1].trim());
+		Elements scoreNodes = doc.select("div.info span.score");
+		if (scoreNodes.size() != 0) {
+			Element scoreWrapNode = scoreNodes.get(0).parent();
+			String scoreInfo = scoreWrapNode.text();
+			if (scoreInfo.startsWith("豆瓣评分")) {
+				v.setScore(scoreInfo.split("：")[1].trim());
+			}
+		}
+
+		//豆瓣影视ID
+		Elements commentNodes = doc.select("div.info span.textbg1");
+		if (commentNodes.size() != 0) {
+			Element commentWrapNode = commentNodes.get(0).parent();
+			commentNodes = commentWrapNode.select("a");
+			if (commentNodes.size() == 2) {
+				String doubanId = Tw80sUtil.getDoubanIdFromCommentUrl(commentNodes.get(1).attr("href"));
+				v.setDoubanMovieId(doubanId);
+			}
 		}
 			
 		//影片简介
@@ -188,6 +202,7 @@ public class VideoParser {
 		} else {
 			v.setDownloadInfoList(parseDownloadUrl(doc));
 		}
+
 		return v;
 	}
 	

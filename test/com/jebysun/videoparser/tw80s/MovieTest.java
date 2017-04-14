@@ -9,6 +9,7 @@ import com.jebysun.videoparser.tw80s.VideoParser;
 import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.Video;
+import com.jebysun.videoparser.tw80s.util.Tw80sUtil;
 
 public class MovieTest {
 
@@ -17,6 +18,7 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
+//		testAny();
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
@@ -27,6 +29,11 @@ public class MovieTest {
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
+	}
+	
+	private static void testAny() {
+		String s = Tw80sUtil.getDoubanIdFromCommentUrl("https://movie.douban.com/subject/25801066/comments");
+		System.out.println(s);
 	}
 	
 	public static void testVideoClient() {
@@ -40,7 +47,7 @@ public class MovieTest {
 					System.out.println("==========="+v.getName());
 					System.out.println(v.getNote());
 					System.out.println(v.getScore());
-					System.out.println(v.getHdPosterUrl()!=null ? v.getHdPosterUrl() : v.getPosterUrl());
+					System.out.println(v.getPosterUrl());
 				}
 			}
 			
@@ -120,9 +127,9 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-//		String url = "http://www.80s.tw/movie/19412";
+		String url = "http://www.80s.tw/movie/19412";
 //		String url = "http://www.80s.tw/movie/18728";
-		String url = "http://www.80s.tw/movie/19239";
+//		String url = "http://www.80s.tw/movie/273";
 //		String url = "http://www.80s.tw/ju/19249";
 		try {
 			Video v = VideoParser.getVideoDetail(url);
@@ -150,6 +157,7 @@ public class MovieTest {
 		System.out.println("海报地址:"+v.getPosterUrl());
 		System.out.println("上映日期:"+v.getReleaseDate());
 		System.out.println("豆瓣评分:"+v.getScore());
+		System.out.println("豆瓣影视Id:"+v.getDoubanMovieId());
 		System.out.println("剧情简介:"+v.getStory());
 		System.out.println("视频截图:"+v.getScreenShotUrl());
 		System.out.println("=====下载信息");

@@ -44,8 +44,9 @@ public class VideoParseClient {
 								.replaceFirst("枪版", "")
 								.replaceFirst("\\[", "")
 								.replaceFirst("\\]", "");
+						String hdUrl = PostImageParser.parseHDPostImageUrl(keyName);
 						//设置高清海报地址
-						v.setHdPosterUrl(PostImageParser.parseHDPostImageUrl(keyName));
+//						v.setHdPosterUrl(hdUrl);
 						
 						finishedCount++;
 						if (finishedCount == videoList.size()) {

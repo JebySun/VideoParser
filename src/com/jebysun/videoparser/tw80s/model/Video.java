@@ -23,7 +23,7 @@ public class Video implements Serializable {
 	//别名
 	private String alias;
 
-	//视频备注
+	//视频标注
 	private String note;
 
 	//视频详情地址
@@ -31,9 +31,6 @@ public class Video implements Serializable {
 	
 	//视频海报地址
 	private String posterUrl;
-	
-	//高清海报地址
-	private String hdPosterUrl;
 	
 	//视频截图地址
 	private String screenShotUrl;
@@ -56,11 +53,12 @@ public class Video implements Serializable {
 	private String score;
 	//剧情简介
 	private String story;
+	//豆瓣影视ID
+	private String doubanMovieId;
 	
 	//下载地址信息列表
 	private List<DownloadInfo> downloadInfoList = new ArrayList<DownloadInfo>();
 	
-
 
 	public String getName() {
 		return name;
@@ -198,14 +196,14 @@ public class Video implements Serializable {
 		this.screenShotUrl = screenShotUrl;
 	}
 
-	public String getHdPosterUrl() {
-		return hdPosterUrl;
+	public String getDoubanMovieId() {
+		return doubanMovieId;
 	}
 
-	public void setHdPosterUrl(String hdPosterUrl) {
-		this.hdPosterUrl = hdPosterUrl;
+	public void setDoubanMovieId(String doubanMovieId) {
+		this.doubanMovieId = doubanMovieId;
 	}
-	
+
 	
 }
 
