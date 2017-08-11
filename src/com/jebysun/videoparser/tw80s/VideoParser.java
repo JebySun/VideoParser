@@ -221,7 +221,7 @@ public class VideoParser {
 				.data("keyword", keyword)
 				.post();
 		
-		return parserSimpleVideoList(doc);
+		return parserSearchVideoList(doc);
 	}
 
 	
@@ -482,12 +482,12 @@ public class VideoParser {
 	}
 	
 	/**
-	 * 解析简单的视频列表，即视频列表需要的信息。
+	 * 解析根据关键字搜索到的视频信息列表。
 	 * @param doc - 要解析的HTML文档
 	 * @return - 解析结果，List<Video>集合
 	 * @author Jeby Sun
 	 */
-	private static List<Video> parserSimpleVideoList(Document doc) {
+	private static List<Video> parserSearchVideoList(Document doc) {
 		List<Video> videos = new ArrayList<Video>();
 		//判断是不是没有搜索结果
 		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
@@ -501,7 +501,7 @@ public class VideoParser {
 			v = new Video();
 			Element nameEle = e.select("a").get(0);
 			v.setName(nameEle.text());
-			v.setDetailUrl(nameEle.attr("href"));
+			v.setDetailUrl(Config.DOMAIN + nameEle.attr("href"));
 			v.setVideoType(Tw80sUtil.getVideoTypeByTitle(nameEle.text()));
 			if (v.getVideoType().equals(VideoType.OTHER)) {
 				continue;
@@ -518,6 +518,57 @@ public class VideoParser {
 				} else {
 					v.setNote(s);
 				}
+			}
+			videos.add(v);
+		}
+		return videos;
+	}
+	
+	/**
+	 * 解析简单的视频列表，即视频列表需要的信息。
+	 * @param doc - 要解析的HTML文档
+	 * @return - 解析结果，List<Video>集合
+	 * @author Jeby Sun
+	 */
+	private static List<Video> parserSimpleVideoList(Document doc) {
+		List<Video> videos = new ArrayList<Video>();
+		//判断是不是没有搜索结果
+		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
+		if (isEmptyResultElemts.size() != 0) {
+			return videos;
+		}
+		
+		Video v = null;
+		Elements elements = doc.select("ul.me1>li");
+		for (Element e : elements) {
+			v = new Video();
+			
+			Elements scoreNodes = e.select("a>span.poster_score");
+			Elements noteNodes = e.select("span.tip");
+			Elements imageNodes = e.select("a>img");
+			if (scoreNodes.size() != 0) {
+				v.setScore(scoreNodes.get(0).text());
+			}
+			if (noteNodes.size() != 0) {
+				v.setNote(noteNodes.get(0).text());
+			}
+			if (imageNodes.size() != 0) {
+				//e.g: //t.dyxz.la/upload/img/201612/poster_20161213_2146695_b.jpg!list
+				String imgPath = imageNodes.get(0).attr("_src");
+				imgPath = imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null;
+				if (imgPath !=null && !imgPath.startsWith("http")) {
+					imgPath = "http:" + imgPath;
+				}
+				v.setPosterUrl(imgPath);
+			}
+			
+			String name = e.select("a>img").get(0).attr("alt");
+			String path = e.select("a").get(0).attr("href");
+			v.setName(name);
+			v.setDetailUrl(Config.DOMAIN + path);
+			v.setVideoType(Tw80sUtil.getVideoTypeByURL(path));
+			if (v.getVideoType().equals(VideoType.OTHER)) {
+				continue;
 			}
 			videos.add(v);
 		}

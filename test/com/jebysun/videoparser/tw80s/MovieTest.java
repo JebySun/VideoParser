@@ -9,6 +9,7 @@ import com.jebysun.videoparser.tw80s.VideoParser;
 import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.Video;
+import com.jebysun.videoparser.tw80s.param.MovieQueryParam;
 
 public class MovieTest {
 
@@ -17,10 +18,10 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-//		testMoiveList();
+		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-		testDetail();
+//		testDetail();
 		
 //		testSearch("大话");
 		
@@ -57,7 +58,7 @@ public class MovieTest {
 	
 	private static void testMoiveList() {
 		try {
-			List<Video> videoList = VideoParser.listMovie(null, null, null, null, null, 1);
+			List<Video> videoList = VideoParser.listMovie(MovieQueryParam.CATEGORY_DONGZUO, null, null, null, null, 1);
 			for (Video v : videoList) {
 				System.out.println(v.getName());
 				System.out.println(v.getPosterUrl());
