@@ -27,9 +27,8 @@ final class Config {
 	
 	//影视搜索
 	//POST请求
-	//参数1，search_typeid搜索类型（本站搜索search_typeid=1）
-	//参数2，skey关键字
-	public static final String VIDEO_SEARCH_PATH = "/movie/search";
+	//参数keyword搜索关键字
+	public static final String VIDEO_SEARCH_PATH = "/search";
 	
 	//获取信息超时时间(秒)
 	public static final int TIMEOUT = 10;

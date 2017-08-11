@@ -15,7 +15,8 @@ import org.jsoup.select.Elements;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.Video;
 import com.jebysun.videoparser.tw80s.param.VideoType;
-import com.jebysun.videoparser.tw80s.util.Tw80sUtil;
+import com.jebysun.videoparser.tw80s.utils.Tw80sUtil;
+import com.jebysun.videoparser.utils.JavaUtil;
 
 /**
  * 80s视频资源解析
@@ -100,7 +101,7 @@ public class VideoParser {
 
 		//视频类型(根据视频详情地址路径判断类型)
 		String subUrl = url.substring(url.indexOf("/", 7));
-		v.setVideoType(getVideoType(subUrl));
+		v.setVideoType(Tw80sUtil.getVideoTypeByURL(subUrl));
 		
 		//电影海报
 		Element imgElement = doc.select("div#minfo>div.img>img").get(0);
@@ -134,7 +135,7 @@ public class VideoParser {
 			v.setNote(noteText);
 		} else {
 			Element noteNode = doc.select("div.info>span").get(0);
-			if (noteNode.children().size() == 0 && !Tw80sUtil.isEmptyString(noteNode.text())) {
+			if (noteNode.children().size() == 0 && !JavaUtil.isEmptyString(noteNode.text())) {
 				v.setNote(noteNode.text());
 			}
 			
@@ -217,8 +218,7 @@ public class VideoParser {
 		
 		Document doc = Jsoup.connect(searchUrl)
 				.timeout(Config.TIMEOUT * 1000)
-				.data("search_typeid", "1")
-				.data("skey", keyword)
+				.data("keyword", keyword)
 				.post();
 		
 		return parserSimpleVideoList(doc);
@@ -335,7 +335,7 @@ public class VideoParser {
 			v.setName(name);
 			v.setNote(note.substring(1, note.length()-1));
 			v.setDetailUrl(Config.DOMAIN+path);
-			v.setVideoType(getVideoType(path));
+			v.setVideoType(Tw80sUtil.getVideoTypeByURL(path));
 			videos.add(v);
 		}
 		return videos;
@@ -425,12 +425,12 @@ public class VideoParser {
 			downloadInfo = new DownloadInfo();
 			
 			Element fileSizeNode = urlNodes.get(i).select("span.nm>span").get(0);
-			Element downloadLinkNode = urlNodes.get(i).select("span.xunlei>a").get(0);
+			Element downloadLinkNode = fileSizeNode.select("a").get(0);
 			
 			String downloadFileSize = fileSizeNode.ownText();
 			//去除不可见字符（此空白字符串从源拷贝而来）
 			downloadFileSize = downloadFileSize.replaceAll("      ", "");
-			String downloadTitle = downloadLinkNode.attr("thunderrestitle");
+			String downloadTitle = downloadLinkNode.ownText();
 			String downloadUrl = downloadLinkNode.attr("href");
 			
 //			System.out.println("标题："+ downloadTitle);
@@ -489,42 +489,35 @@ public class VideoParser {
 	 */
 	private static List<Video> parserSimpleVideoList(Document doc) {
 		List<Video> videos = new ArrayList<Video>();
-		Video v = null;
-		Elements elements = doc.select("ul.me1>li");
 		//判断是不是没有搜索结果
-		Elements isEmptyResultElemts = doc.select("div.nomoviesinfo");
+		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
 		if (isEmptyResultElemts.size() != 0) {
 			return videos;
 		}
+		
+		Elements elements = doc.select("#block3 ul.search_list>li");
+		Video v = null;
 		for (Element e : elements) {
 			v = new Video();
-			
-			Elements scoreNodes = e.select("a>span.poster_score");
-			Elements noteNodes = e.select("span.tip");
-			Elements imageNodes = e.select("a>img");
-			if (scoreNodes.size() != 0) {
-				v.setScore(scoreNodes.get(0).text());
-			}
-			if (noteNodes.size() != 0) {
-				v.setNote(noteNodes.get(0).text());
-			}
-			if (imageNodes.size() != 0) {
-				//e.g: //t.dyxz.la/upload/img/201612/poster_20161213_2146695_b.jpg!list
-				String imgPath = imageNodes.get(0).attr("_src");
-				imgPath = imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null;
-				if (imgPath !=null && !imgPath.startsWith("http")) {
-					imgPath = "http:" + imgPath;
-				}
-				v.setPosterUrl(imgPath);
-			}
-			
-			String name = e.select("a>img").get(0).attr("alt");
-			String path = e.select("a").get(0).attr("href");
-			v.setName(name);
-			v.setDetailUrl(Config.DOMAIN+path);
-			v.setVideoType(getVideoType(path));
+			Element nameEle = e.select("a").get(0);
+			v.setName(nameEle.text());
+			v.setDetailUrl(nameEle.attr("href"));
+			v.setVideoType(Tw80sUtil.getVideoTypeByTitle(nameEle.text()));
 			if (v.getVideoType().equals(VideoType.OTHER)) {
 				continue;
+			}
+			v.setAlias(e.ownText());
+			Elements ems = e.select("em");
+			if (ems.size() == 2) {
+				v.setScore(ems.get(0).text().replace("豆瓣", "").replace("分", ""));
+				v.setNote(ems.get(1).text());
+			} else if (ems.size() == 1) {
+				String s = ems.get(0).text();
+				if (s.indexOf("豆瓣") == 0) {
+					v.setScore(s.replace("豆瓣", "").replace("分", ""));
+				} else {
+					v.setNote(s);
+				}
 			}
 			videos.add(v);
 		}
@@ -541,34 +534,14 @@ public class VideoParser {
 		//解析获取全部下载地址的URL
 		String methodStr = e.select("span").get(0).attr("onclick");
 		String levelStr =  methodStr.split("'")[1];
-		return url+"/"+levelStr+"-2";
+		return url + "/" + levelStr+"-2";
 	}
 	
-	
-	/**
-	 * 根据视频URL判断类型
-	 * @param url
-	 * @return
-	 */
-	private static String getVideoType(String url) {
-		if (url.startsWith("/movie/")) {
-			return VideoType.DY;
-		} else if (url.startsWith("/ju/")) {
-			return VideoType.DSJ;
-		} else if (url.startsWith("/zy/")) {
-			return VideoType.ZY;
-		} else if (url.startsWith("/dm/")) {
-			return VideoType.DM;
-		}
-		return VideoType.OTHER;
-	}
 	
 	
 	
 	
 }
-
-
 
 
 

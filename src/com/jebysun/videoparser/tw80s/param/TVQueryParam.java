@@ -26,6 +26,7 @@ public final class TVQueryParam {
 
 	
 	//年份
+	public static String YEAR_2017 = "2017";
 	public static String YEAR_2016 = "2016";
 	public static String YEAR_2015 = "2015";
 	public static String YEAR_2014 = "2014";
@@ -37,7 +38,8 @@ public final class TVQueryParam {
 	public static String YEAR_2008 = "2008";
 	public static String YEAR_2007 = "2007";
 	public static String YEAR_2006 = "2006";
-	public static String YEAR_2005 = "2005";
+	// 2005及以前
+	public static String YEAR_2005_BEFORE = "2005";
 	
 	//地区
 	public static String AREA_DALUJU = "9";

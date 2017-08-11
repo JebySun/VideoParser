@@ -2,9 +2,7 @@ package com.jebysun.videoparser.tw80s.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 视频
