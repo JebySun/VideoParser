@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.jebysun.videoparser.tw80s.PostImageParser;
 import com.jebysun.videoparser.tw80s.VideoParseClient;
-import com.jebysun.videoparser.tw80s.VideoParser;
+import com.jebysun.videoparser.tw80s.VideoParserImp;
 import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.Video;
@@ -18,17 +18,53 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		testMoiveList();
+//		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
 //		testDetail();
-		
-//		testSearch("大话");
-		
+		testSearch("小新");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 	}
+	
+	/*
+	 * 最佳接口
+	public static void bestClientAPI() {
+		VideoParser.listMoivie(1)
+				.category("")
+				.year()
+				...
+				.list(new Callback() {
+					public void success(List<Video> list) {
+						
+					}
+					public void fail(Exception e) {
+						
+					}
+				});
+		
+		VideoParser.getVideoDetail("")
+				.get(new Callback() {
+					public void success(List<Video> list) {
+						
+					}
+					public void fail(Exception e) {
+						
+					}
+				});
+		
+		VideoParser.searchVideo("")
+				.search(new Callback() {
+					public void success(List<Video> list) {
+						
+					}
+					public void fail(Exception e) {
+						
+					}
+				});
+	}
+	*/
 	
 	
 	public static void testVideoClient() {
@@ -58,7 +94,8 @@ public class MovieTest {
 	
 	private static void testMoiveList() {
 		try {
-			List<Video> videoList = VideoParser.listMovie(MovieQueryParam.CATEGORY_DONGZUO, null, null, null, null, 1);
+			VideoParser vp = new VideoParserImp();
+			List<Video> videoList = vp.listMovie(MovieQueryParam.CATEGORY_DONGZUO, null, null, null, null, 1);
 			for (Video v : videoList) {
 				System.out.println(v.getName());
 				System.out.println(v.getPosterUrl());
@@ -73,7 +110,8 @@ public class MovieTest {
 	
 	private static void testTVlist() {
 		try {
-			List<Video> videoList = VideoParser.listTV(null, null, null, null, 1);
+			VideoParser vp = new VideoParserImp();
+			List<Video> videoList = vp.listTV(null, null, null, null, 1);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
@@ -86,7 +124,8 @@ public class MovieTest {
 	
 	private static void testMangalist() {
 		try {
-			List<Video> videoList = VideoParser.listManga(null, null, 1);
+			VideoParser vp = new VideoParserImp();
+			List<Video> videoList = vp.listManga(null, null, 1);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
@@ -98,7 +137,8 @@ public class MovieTest {
 	
 	private static void testVarietylist() {
 		try {
-			List<Video> videoList = VideoParser.listVariety(null, 1);
+			VideoParser vp = new VideoParserImp();
+			List<Video> videoList = vp.listVariety(null, 1);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
@@ -110,7 +150,8 @@ public class MovieTest {
 
 	private static void testSearch(String keyword) {
 		try {
-			List<Video> videoList = VideoParser.searchVideo(keyword);
+			VideoParser vp = new VideoParserImp();
+			List<Video> videoList = vp.searchVideo(keyword);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
 				printVideo(v);
@@ -127,7 +168,8 @@ public class MovieTest {
 //		String url = "http://www.80s.tw/movie/273";
 //		String url = "http://www.80s.tw/ju/19249";
 		try {
-			Video v = VideoParser.getVideoDetail(url);
+			VideoParser vp = new VideoParserImp();
+			Video v = vp.getVideoDetail(url);
 			printVideo(v);
 		} catch (IOException e) {
 			e.printStackTrace();

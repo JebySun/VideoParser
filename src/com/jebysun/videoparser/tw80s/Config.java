@@ -2,7 +2,7 @@ package com.jebysun.videoparser.tw80s;
 
 /**
  * 资源配置
- * 80s手机电影http://www.80s.tw
+ * 80s电影 http://www.80s.tw
  * @author Jeby Sun
  * @Date 2015-12-14
  */

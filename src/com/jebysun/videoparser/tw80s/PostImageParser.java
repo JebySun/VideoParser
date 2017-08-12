@@ -10,14 +10,14 @@ import org.jsoup.select.Elements;
 import com.jebysun.videoparser.utils.JavaUtil;
 
 /**
- * 高清海报解析
+ * 豆瓣高清海报解析
  * @author Administrator
  *
  */
 public class PostImageParser {
 	
 	/**
-	 * 获取高清海报地址
+	 * 根据影视名称获取豆瓣高清海报地址
 	 */
 	public static String parseHDPostImageUrl(String videoName) {
 		String hdPostImgUrl = null;

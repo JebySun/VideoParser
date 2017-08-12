@@ -22,7 +22,8 @@ public class VideoParseClient {
 	public List<Video> listMovie(int index) {
 		List<Video> videoList = null;
 		try {
-			videoList = VideoParser.listMovie(null, null, null, null, null, index);
+			VideoParser vp = new VideoParserImp();
+			videoList = vp.listMovie(null, null, null, null, null, index);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +33,8 @@ public class VideoParseClient {
 	public void listMovieWithHDPoster(int index, MovieCallBack callBack) {
 		this.callBack = callBack;
 		try {
-			videoList = VideoParser.listMovie(null, null, null, null, null, index);
+			VideoParser vp = new VideoParserImp();
+			videoList = vp.listMovie(null, null, null, null, null, index);
 			fixedThreadPool = Executors.newFixedThreadPool(6);
 			for (final Video v : videoList) {
 				fixedThreadPool.execute(new Runnable() {
