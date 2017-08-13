@@ -33,7 +33,13 @@ final class Config {
 	//获取信息超时时间(秒)
 	public static final int TIMEOUT = 10;
 	
-
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	
+	
+	//豆瓣短评url
+	public static final String DOUBAN_COMMENTS = "https://movie.douban.com/subject/$doubanVideoId/comments";
 	
 
 }

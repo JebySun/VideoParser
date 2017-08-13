@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class DoubanComment implements Serializable {
 	private static final long serialVersionUID = 8393228485198006735L;
+	
 	private String userName;
 	private String userAvatar;
 	private String comment;

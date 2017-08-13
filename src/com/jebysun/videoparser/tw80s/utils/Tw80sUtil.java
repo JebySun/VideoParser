@@ -1,11 +1,16 @@
 package com.jebysun.videoparser.tw80s.utils;
 
-import com.jebysun.videoparser.tw80s.param.VideoType;
+import com.jebysun.videoparser.tw80s.model.SearchKeyword.KeywordType;
+import com.jebysun.videoparser.tw80s.model.Video.VideoType;
 
 public class Tw80sUtil {
 	private Tw80sUtil() {}
 	
-	
+	/**
+	 * 从视频的豆瓣短评url获取豆瓣视频ID
+	 * @param commentUrl 豆瓣短评url
+	 * @return 豆瓣视频ID
+	 */ 
 	public static String getDoubanIdFromCommentUrl(String commentUrl) {
     	String sid = null;
     	if (commentUrl == null) {
@@ -24,50 +29,75 @@ public class Tw80sUtil {
 	 * @param url
 	 * @return
 	 */
-	public static String getVideoTypeByURL(String url) {
-		if (url.startsWith("/movie/")) {
-			return VideoType.DY;
-		} else if (url.startsWith("/ju/")) {
-			return VideoType.DSJ;
-		} else if (url.startsWith("/zy/")) {
-			return VideoType.ZY;
-		} else if (url.startsWith("/dm/")) {
-			return VideoType.DM;
+	public static VideoType getVideoTypeByURL(String url) {
+		if (url.contains("/movie/")) {
+			return VideoType.MOVIE;
+		} else if (url.contains("/ju/")) {
+			return VideoType.TV;
+		} else if (url.contains("/zy/")) {
+			return VideoType.VARIETY;
+		} else if (url.contains("/dm/")) {
+			return VideoType.MANGA;
 		}
 		return VideoType.OTHER;
 	}
 	
-
-	public static String getVideoTypeByTitle(String title) {
+	/**
+	 * 根据视频标题判断视频类型
+	 * @param title
+	 * @return
+	 */
+	public static VideoType getVideoTypeByTitle(String title) {
 		String typeKey = title.substring(1, title.indexOf("]"));
-		String type = null;
+		VideoType type = null;
 		switch (typeKey) {
 			case "电影":
-				type = VideoType.DY;
+				type = VideoType.MOVIE;
 				break;
 			case "大陆剧":
-				type = VideoType.DSJ;
+				type = VideoType.TV;
 				break;
 			case "港台剧":
-				type = VideoType.DSJ;
+				type = VideoType.TV;
 				break;
 			case "日韩剧":
-				type = VideoType.DSJ;
+				type = VideoType.TV;
 				break;
 			case "欧美剧":
-				type = VideoType.DSJ;
+				type = VideoType.TV;
 				break;
 			case "综艺":
-				type = VideoType.ZY;
+				type = VideoType.VARIETY;
 				break;
 			case "动漫":
-				type = VideoType.DM;
+				type = VideoType.MANGA;
 				break;
 			default:
 				type = VideoType.OTHER;
 		}
 		return type;
 	}
+	
+	/**
+	 * 根据关键字url判断关键字类型
+	 * @param url
+	 * @return
+	 */
+	public static KeywordType getKeywordTypeByURL(String url) {
+		if (url.contains("/movie/")) {
+			return KeywordType.MOVIE;
+		} else if (url.contains("/ju/")) {
+			return KeywordType.TV;
+		} else if (url.contains("/zy/")) {
+			return KeywordType.VARIETY;
+		} else if (url.contains("/dm/")) {
+			return KeywordType.MANGA;
+		} else if (url.contains("/tag/")) {
+			return KeywordType.TOPIC;
+		}
+		return KeywordType.OTHER;
+	}
+	
 }
 
 

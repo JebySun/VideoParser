@@ -1,10 +1,12 @@
-package com.jebysun.videoparser.tw80s;
+package com.jebysun.videoparser.tw80s.bak;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.jebysun.videoparser.tw80s.VideoParser;
+import com.jebysun.videoparser.tw80s.VideoParserImp;
 import com.jebysun.videoparser.tw80s.model.Video;
 /**
  * 获取豆瓣高清海报

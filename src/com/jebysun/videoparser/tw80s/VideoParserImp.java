@@ -12,9 +12,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.jebysun.videoparser.tw80s.model.DoubanComment;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
+import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
-import com.jebysun.videoparser.tw80s.param.VideoType;
+import com.jebysun.videoparser.tw80s.model.Video.VideoType;
 import com.jebysun.videoparser.tw80s.utils.Tw80sUtil;
 import com.jebysun.videoparser.utils.JavaUtil;
 
@@ -96,9 +98,7 @@ public class VideoParserImp implements VideoParser {
 	public Video getVideoDetail(String url) throws IOException {
 		Video v = new Video();
 		
-		Document doc = Jsoup.connect(url)
-				.timeout(Config.TIMEOUT * 1000)
-				.get();
+		Document doc = Jsoup.connect(url).timeout(Config.TIMEOUT * 1000).get();
 		
 		//电影详情地址
 		v.setDetailUrl(url);
@@ -134,7 +134,7 @@ public class VideoParserImp implements VideoParser {
 		}
 		
 		//备注
-		if (v.getVideoType().equals(VideoType.ZY)) {
+		if (v.getVideoType() == VideoType.VARIETY) {
 			String noteText = doc.select("div.info>span").get(0).ownText();
 			v.setNote(noteText);
 		} else {
@@ -175,15 +175,18 @@ public class VideoParserImp implements VideoParser {
 		}
 
 		//豆瓣影视ID
+		/* 网站更新，解析方式过时。
 		Elements commentNodes = doc.select("div.info span.textbg1");
 		if (commentNodes.size() != 0) {
 			Element commentWrapNode = commentNodes.get(0).parent();
 			commentNodes = commentWrapNode.select("a");
 			if (commentNodes.size() == 2) {
 				String doubanId = Tw80sUtil.getDoubanIdFromCommentUrl(commentNodes.get(1).attr("href"));
-				v.setDoubanMovieId(doubanId);
+				v.setDoubanVideoId(doubanId);
 			}
 		}
+		*/
+		v.setDoubanVideoId(getDoubanVideoId(doc));
 			
 		//影片简介
 		Elements storyNodes = doc.select("#movie_content_all");
@@ -197,17 +200,77 @@ public class VideoParserImp implements VideoParser {
 		v.setStory(story);
 		
 		//下载地址
+		/* 下载地址非常多时，视频详情页只显示部分下载地址，全部下载地址需要到另一个页面解析。
+		 * 现在网站已更新，在视频详情页显示全部下载地址，不需要考虑这种情况了。
 		Elements tNodes = doc.select("ul.dllist1>li:not(.nohover)>div");
-		//收起的下载地址，比如电视剧，动漫，综艺的剧集下载地址可能很多
+		//需要到新的页面获取全部下载地址
 		if (tNodes.size() != 0) {
-//			String downloadPageUrl = getDownloadPageUrl(url, tNodes.get(0));
-//			Map<String, String> downloadMap = getAllDownloadUrl(downloadPageUrl);
-//			v.setDownloadMap(downloadMap);
+			String downloadPageUrl = getDownloadPageUrl(url, tNodes.get(0));
+			List<DownloadInfo> downloadInfoList = getAllDownloadUrl(downloadPageUrl);
+			v.setDownloadInfoList(downloadInfoList);
 		} else {
-			v.setDownloadInfoList(parseDownloadUrl(doc));
+			v.setDownloadInfoList(parseDownloadInfo(doc));
 		}
+		*/
+		
+		v.setDownloadInfoList(parseDownloadInfo(doc));
 
 		return v;
+	}
+	
+    /**
+     * 获取视频的豆瓣短评
+     * 说明：豆瓣短评分页开始序号不按常理，并且未登陆豆瓣帐号的情况下只能获取前几页数据。
+     * @param doubanVideoId 豆瓣视频ID
+     * @param pageIndex 分页序号
+     * @return 豆瓣短评列表
+     * @throws IOException
+     */
+	@Override
+	public List<DoubanComment> listDoubanComment(String doubanVideoId, int pageIndex) throws IOException {
+		List<DoubanComment> commentList = new ArrayList<>();
+		String doubanVideoUrl = Config.DOUBAN_COMMENTS;
+		doubanVideoUrl = doubanVideoUrl.replaceFirst("\\$doubanVideoId", doubanVideoId);
+		
+		Document doc = Jsoup.connect(doubanVideoUrl).timeout(Config.TIMEOUT * 1000).get();
+		// TODO 豆瓣短评解析，现在的问题是豆瓣短评的翻页序号没搞清楚。
+		Elements videoNodes = doc.select("ul.me1>li");
+		return commentList;
+	}
+
+    /**
+     * 相关视频推荐（最多10个视频，通常是10个，可考虑固定大小的数组存放）
+     * @param videoUrl 当前视频url
+     * @return 视频列表
+     * @throws IOException
+     */
+	@Override
+	public List<Video> listRecommendVideo(String videoUrl) throws IOException {
+		List<Video> videoList = new ArrayList<>();
+		Document doc = Jsoup.connect(videoUrl).timeout(Config.TIMEOUT * 1000).get();
+		Elements videoNodes = doc.select("ul.me1>li");
+		Video v = null;
+		for (Element videoNode : videoNodes) {
+			Element imgNode = videoNode.select("a>img").first();
+			Element scoreNode = videoNode.select("a>span.poster_score").first();
+			Element theNameAndLinkNode = videoNode.select("h3>a").first();
+			Element noteNode = videoNode.select("span.tip").first();
+			
+			v = new Video();
+			v.setName(theNameAndLinkNode.text());
+			v.setDetailUrl(Config.DOMAIN + theNameAndLinkNode.attr("href"));
+			String imgPath = imgNode.attr("_src");
+			imgPath = imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null;
+			if (imgPath != null && !imgPath.startsWith("http")) {
+				imgPath = "http:" + imgPath;
+			}
+			v.setPosterUrl(imgPath);
+			v.setScore(scoreNode.text());
+			v.setNote(noteNode.text());
+			v.setVideoType(Tw80sUtil.getVideoTypeByURL(videoUrl));
+			videoList.add(v);
+		}
+		return videoList;
 	}
 	
 	/**
@@ -228,16 +291,31 @@ public class VideoParserImp implements VideoParser {
 		return parseSearchVideoList(doc);
 	}
 	
+    /**
+     * 获取热门搜索关键字列表
+     * @return
+     * @throws IOException
+     */
 	@Override
-	public List<String> listTopKeyword() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SearchKeyword> listTopKeyword() throws IOException {
+		List<SearchKeyword> keywordList = new ArrayList<>();
+		Document doc = Jsoup.connect(Config.DOMAIN).timeout(Config.TIMEOUT * 1000).get();
+		Elements keywordsNodes = doc.select("#hot-words>li>a");
+		SearchKeyword keyword = null;
+		for (Element node : keywordsNodes) {
+			keyword = new SearchKeyword();
+			keyword.setTitle(node.text());
+			keyword.setUrl(Config.DOMAIN + node.attr("href"));
+			keyword.setType(Tw80sUtil.getKeywordTypeByURL(keyword.getUrl()));
+			keywordList.add(keyword);
+		}
+		return keywordList;
 	}
 
 	
 	
 	
-	
+	/////////////////////////////////////////////////////////
 	
 	
 	
@@ -254,7 +332,7 @@ public class VideoParserImp implements VideoParser {
 	 * @throws IOException
 	 */
 	private static List<Video> listMovie(String category, String area, String language, String year, String sort, String pageIndex) throws IOException {
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, String> param = new HashMap<>();
 		param.put("category", category);
 		param.put("area", area);
 		param.put("language", language);
@@ -280,7 +358,7 @@ public class VideoParserImp implements VideoParser {
 	 * @throws IOException
 	 */
 	private static List<Video> listTV(String category, String area, String year, String sort, String pageIndex) throws IOException {
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, String> param = new HashMap<>();
 		param.put("category", category);
 		param.put("area", area);
 		param.put("year", year);
@@ -303,7 +381,7 @@ public class VideoParserImp implements VideoParser {
 	 * @author Jeby Sun
 	 */
 	private static List<Video> listManga(String type, String sort, String pageIndex) throws IOException {
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, String> param = new HashMap<>();
 		param.put("type", type);
 		param.put("sort", sort);
 		param.put("pageIndex", pageIndex);
@@ -322,7 +400,7 @@ public class VideoParserImp implements VideoParser {
 	 * @author Jeby Sun
 	 */
 	private static List<Video> listVariety(String sort, String pageIndex) throws IOException {
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, String> param = new HashMap<>();
 		param.put("sort", sort);
 		param.put("pageIndex", pageIndex);
 		String queryUrl = buildQueryUrl(Config.VARIETY_QUERY_PATH, param);
@@ -338,7 +416,7 @@ public class VideoParserImp implements VideoParser {
 	 */
 	@Deprecated
 	private static List<Video> parseVarietyList(Document doc) {
-		List<Video> videos = new ArrayList<Video>();
+		List<Video> videos = new ArrayList<>();
 		Video v = null;
 		Elements elements = doc.select("ul.zy>li");
 		for (Element e : elements) {
@@ -434,12 +512,12 @@ public class VideoParserImp implements VideoParser {
 	 * @param doc
 	 * @return
 	 */
-	private static List<DownloadInfo> parseDownloadUrl(Document doc) {
-		List<DownloadInfo> downloadInfoList = new ArrayList<DownloadInfo>();
+	private static List<DownloadInfo> parseDownloadInfo(Document doc) {
+		List<DownloadInfo> downloadInfoList = new ArrayList<>();
 		Elements urlNodes = doc.select("ul.dllist1>li:not(.nohover)");
 		DownloadInfo downloadInfo = null;
 		//下载地址序列反转，网页上的下载地址最近更新的排在前面，这里我们从最后面开始解析
-		for (int i=urlNodes.size()-1; i>=0; i--) {
+		for (int i = urlNodes.size() - 1; i >= 0; i--) {
 			downloadInfo = new DownloadInfo();
 			
 			Element fileSizeNode = urlNodes.get(i).select("span.nm>span").get(0);
@@ -465,15 +543,16 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 * @throws IOException
 	 */
-//	private static Map<String, String> getAllDownloadUrl(String downloadPageUrl) throws IOException {
-//		
-//		Document doc = Jsoup.connect(downloadPageUrl)
-//				.timeout(Config.TIMEOUT * 1000)
-//				.maxBodySize(1024*1024*2) //2M 设置网页内容最大容量
-//				.get();
-//		
-//		return parseDownloadUrl(doc);
-//	}
+	@Deprecated
+	private static List<DownloadInfo> getAllDownloadUrl(String downloadPageUrl) throws IOException {
+		
+		Document doc = Jsoup.connect(downloadPageUrl)
+				.timeout(Config.TIMEOUT * 1000)
+				.maxBodySize(1024*1024*2) //2M 设置网页内容最大容量
+				.get();
+		
+		return parseDownloadInfo(doc);
+	}
 	
 	/**
 	 * 通过Jsoup获取html文本文档
@@ -501,7 +580,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return - 解析结果，List<Video>集合
 	 */
 	private static List<Video> parseSearchVideoList(Document doc) {
-		List<Video> videos = new ArrayList<Video>();
+		List<Video> videos = new ArrayList<>();
 		//判断是不是没有搜索结果
 		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
 		if (isEmptyResultElemts.size() != 0) {
@@ -516,7 +595,7 @@ public class VideoParserImp implements VideoParser {
 			v.setName(nameEle.text());
 			v.setDetailUrl(Config.DOMAIN + nameEle.attr("href"));
 			v.setVideoType(Tw80sUtil.getVideoTypeByTitle(nameEle.text()));
-			if (v.getVideoType().equals(VideoType.OTHER)) {
+			if (v.getVideoType() == VideoType.OTHER) {
 				continue;
 			}
 			v.setAlias(e.ownText());
@@ -543,8 +622,8 @@ public class VideoParserImp implements VideoParser {
 	 * @return - 解析结果，List<Video>集合
 	 */
 	private static List<Video> parseSimpleVideoList(Document doc) {
-		List<Video> videos = new ArrayList<Video>();
-		//判断是不是没有搜索结果
+		List<Video> videos = new ArrayList<>();
+		//判断是不是空
 		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
 		if (isEmptyResultElemts.size() != 0) {
 			return videos;
@@ -579,7 +658,8 @@ public class VideoParserImp implements VideoParser {
 			v.setName(name);
 			v.setDetailUrl(Config.DOMAIN + path);
 			v.setVideoType(Tw80sUtil.getVideoTypeByURL(path));
-			if (v.getVideoType().equals(VideoType.OTHER)) {
+			v.setVideoType(VideoType.MOVIE);
+			if (v.getVideoType() == VideoType.OTHER) {
 				continue;
 			}
 			videos.add(v);
@@ -601,6 +681,20 @@ public class VideoParserImp implements VideoParser {
 		return url + "/" + levelStr+"-2";
 	}
 
+	/**
+	 * 获取豆瓣视频Id
+	 * @param doc
+	 * @return
+	 */
+	private String getDoubanVideoId(Document doc) {
+		String doubanVideoId = null;
+		Elements commentNodes = doc.select("i.fa-external-link");
+		if (commentNodes.size() != 0) {
+			Element commentWrapNode = commentNodes.get(0).parent();
+			doubanVideoId = Tw80sUtil.getDoubanIdFromCommentUrl(commentWrapNode.attr("href"));
+		}
+		return doubanVideoId;
+	}
 	
 	
 	

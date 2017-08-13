@@ -3,11 +3,12 @@ package com.jebysun.videoparser.tw80s;
 import java.io.IOException;
 import java.util.List;
 
-import com.jebysun.videoparser.tw80s.PostImageParser;
-import com.jebysun.videoparser.tw80s.VideoParseClient;
 import com.jebysun.videoparser.tw80s.VideoParserImp;
-import com.jebysun.videoparser.tw80s.VideoParseClient.MovieCallBack;
+import com.jebysun.videoparser.tw80s.bak.PostImageParser;
+import com.jebysun.videoparser.tw80s.bak.VideoParseClient;
+import com.jebysun.videoparser.tw80s.bak.VideoParseClient.MovieCallBack;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
+import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
 import com.jebysun.videoparser.tw80s.param.MovieQueryParam;
 
@@ -21,11 +22,14 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-//		testDetail();
-		testSearch("小新");
+		testDetail();
+//		testSearch("小新");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
+		
+//		testRecommend();
+//		testListTopKeywords();
 	}
 	
 	/*
@@ -163,8 +167,8 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-//		String url = "http://www.80s.tw/movie/19412";
-		String url = "http://www.80s.tw/movie/21252";
+		String url = "http://www.80s.tw/movie/19412";
+//		String url = "http://www.80s.tw/movie/21252";
 //		String url = "http://www.80s.tw/movie/273";
 //		String url = "http://www.80s.tw/ju/19249";
 		try {
@@ -176,6 +180,32 @@ public class MovieTest {
 		}
 	}
 	
+	private static void testRecommend() {
+		String url = "http://www.80s.tw/movie/21252";
+		try {
+			VideoParser vp = new VideoParserImp();
+			List<Video> videoList = vp.listRecommendVideo(url);
+			for (Video v : videoList) {
+				printVideo(v);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void testListTopKeywords() {
+		try {
+			VideoParser vp = new VideoParserImp();
+			List<SearchKeyword> keywordList = vp.listTopKeyword();
+			for (SearchKeyword v : keywordList) {
+				System.out.println("标题：" + v.getTitle());
+				System.out.println("类型：" + v.getType());
+				System.out.println("URL：" + v.getUrl());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static void printVideo(Video v) {
 		System.out.println("========视频详情========");
@@ -194,7 +224,7 @@ public class MovieTest {
 		System.out.println("海报地址:"+v.getPosterUrl());
 		System.out.println("上映日期:"+v.getReleaseDate());
 		System.out.println("豆瓣评分:"+v.getScore());
-		System.out.println("豆瓣影视Id:"+v.getDoubanMovieId());
+		System.out.println("豆瓣影视Id:"+v.getDoubanVideoId());
 		System.out.println("剧情简介:"+v.getStory());
 		System.out.println("视频截图:"+v.getScreenShotUrl());
 		System.out.println("=====下载信息");
@@ -212,6 +242,6 @@ public class MovieTest {
             System.out.println("下载地址：" + download.getDownloadUrl());  
         }  
     }
-	
+    
 
 }

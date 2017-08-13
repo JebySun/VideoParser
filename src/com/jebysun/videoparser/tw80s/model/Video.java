@@ -13,7 +13,7 @@ public class Video implements Serializable {
 	private static final long serialVersionUID = -2764906880573396559L;
 
 	//视频类别：电影，电视剧，综艺，动漫
-	private String videoType;
+	private VideoType videoType;
 	
 	//视频名称
 	private String name;
@@ -52,7 +52,7 @@ public class Video implements Serializable {
 	//剧情简介
 	private String story;
 	//豆瓣影视ID
-	private String doubanMovieId;
+	private String doubanVideoId;
 	
 	//下载地址信息列表
 	private List<DownloadInfo> downloadInfoList = new ArrayList<DownloadInfo>();
@@ -179,11 +179,11 @@ public class Video implements Serializable {
 		this.downloadInfoList = downloadInfoList;
 	}
 
-	public String getVideoType() {
+	public VideoType getVideoType() {
 		return videoType;
 	}
 
-	public void setVideoType(String videoType) {
+	public void setVideoType(VideoType videoType) {
 		this.videoType = videoType;
 	}
 	public String getScreenShotUrl() {
@@ -193,13 +193,27 @@ public class Video implements Serializable {
 	public void setScreenShotUrl(String screenShotUrl) {
 		this.screenShotUrl = screenShotUrl;
 	}
-
-	public String getDoubanMovieId() {
-		return doubanMovieId;
+	
+	public String getDoubanVideoId() {
+		return doubanVideoId;
 	}
 
-	public void setDoubanMovieId(String doubanMovieId) {
-		this.doubanMovieId = doubanMovieId;
+	public void setDoubanVideoId(String doubanVideoId) {
+		this.doubanVideoId = doubanVideoId;
+	}
+
+
+	/**
+	 * 视频类型
+	 * @author Administrator
+	 *
+	 */
+	public enum VideoType {
+		MOVIE,   //电影
+		TV,      //电视剧
+		MANGA,   //动漫
+		VARIETY, //综艺
+		OTHER    //其他
 	}
 
 	
