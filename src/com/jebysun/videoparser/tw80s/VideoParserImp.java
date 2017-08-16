@@ -335,8 +335,8 @@ public class VideoParserImp implements VideoParser {
 		for (Element node : keywordsNodes) {
 			keyword = new SearchKeyword();
 			keyword.setTitle(node.text());
-			keyword.setUrl(Config.DOMAIN + node.attr("href"));
-			keyword.setType(Tw80sUtil.getKeywordTypeByURL(keyword.getUrl()));
+			keyword.setLink(Config.DOMAIN + node.attr("href"));
+			keyword.setType(Tw80sUtil.getKeywordTypeByURL(keyword.getLink()));
 			keywordList.add(keyword);
 		}
 		return keywordList;

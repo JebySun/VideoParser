@@ -34,7 +34,7 @@ public class MovieTest {
 //		testRecommend();
 //		testListTopKeywords();
 		
-		testDoubanComment();
+//		testDoubanComment();
 	}
 	
 	/*
@@ -221,7 +221,7 @@ public class MovieTest {
 			for (SearchKeyword v : keywordList) {
 				System.out.println("标题：" + v.getTitle());
 				System.out.println("类型：" + v.getType());
-				System.out.println("URL：" + v.getUrl());
+				System.out.println("链接：" + v.getLink());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

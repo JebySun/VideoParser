@@ -10,7 +10,7 @@ public class SearchKeyword implements Serializable {
 	private static final long serialVersionUID = 2389063484827433001L;
 	
 	private String title;
-	private String url;
+	private String link;
 	private KeywordType type;
 	
 	public String getTitle() {
@@ -21,14 +21,14 @@ public class SearchKeyword implements Serializable {
 		this.title = title;
 	}
 	
-	public String getUrl() {
-		return url;
+	public String getLink() {
+		return link;
 	}
-	
-	public void setUrl(String url) {
-		this.url = url;
+
+	public void setLink(String link) {
+		this.link = link;
 	}
-	
+
 	public KeywordType getType() {
 		return type;
 	}
