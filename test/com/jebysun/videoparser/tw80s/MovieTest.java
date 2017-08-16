@@ -8,6 +8,7 @@ import com.jebysun.videoparser.tw80s.VideoParserImp;
 import com.jebysun.videoparser.tw80s.bak.PostImageParser;
 import com.jebysun.videoparser.tw80s.bak.VideoParseClient;
 import com.jebysun.videoparser.tw80s.bak.VideoParseClient.MovieCallBack;
+import com.jebysun.videoparser.tw80s.exception.PermissionException;
 import com.jebysun.videoparser.tw80s.model.DoubanComment;
 import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
@@ -34,7 +35,7 @@ public class MovieTest {
 //		testRecommend();
 //		testListTopKeywords();
 		
-//		testDoubanComment();
+		testDoubanComment();
 	}
 	
 	/*
@@ -78,7 +79,7 @@ public class MovieTest {
 	public static void testDoubanComment() {
 		VideoParser vp = new VideoParserImp();
 		try {
-			DoubanCommentPage page = vp.listDoubanComment("26363254", 0);
+			DoubanCommentPage page = vp.listDoubanComment("26363254", 2000);
 			List<DoubanComment> list = page.getCommentList();
 			System.out.println("本页大小：" + list.size());
 			for (DoubanComment comment : list) {
@@ -87,6 +88,8 @@ public class MovieTest {
 			}
 			System.out.println("下一页开始序号：" + page.getNextPageStart());
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (PermissionException e) {
 			e.printStackTrace();
 		}
 	}

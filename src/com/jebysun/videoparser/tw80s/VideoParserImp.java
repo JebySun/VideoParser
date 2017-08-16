@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.jebysun.videoparser.tw80s.exception.PermissionException;
 import com.jebysun.videoparser.tw80s.model.DoubanComment;
 import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
@@ -228,17 +230,36 @@ public class VideoParserImp implements VideoParser {
      * @param pageStart 短评每页开始序号 
      * @return 豆瓣短评页数据
      * @throws IOException
+     * @throws PermissionException
      */
 	@Override
-	public DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException {
+	public DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException, PermissionException {
 		List<DoubanComment> commentList = new ArrayList<>();
 		DoubanComment comment = null;
 		
 		String doubanVideoUrl = Config.DOUBAN_COMMENTS;
 		doubanVideoUrl = doubanVideoUrl.replaceFirst("\\$doubanVideoId", doubanVideoId);
 		doubanVideoUrl = doubanVideoUrl.replaceFirst("\\$pageStart", String.valueOf(pageStart));
-		Document doc = Jsoup.connect(doubanVideoUrl).timeout(Config.TIMEOUT * 1000).get();
+		Document doc = null;
+		try {
+			doc = Jsoup.connect(doubanVideoUrl)
+					.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36")
+					.timeout(Config.TIMEOUT * 1000)
+					.get();
+		} catch (HttpStatusException e) {
+//			e.printStackTrace();
+			throw new PermissionException("豆瓣权限异常，登录豆瓣帐号才能访问该内容。");
+		} catch (IOException e) {
+			throw e;
+		}
+		
 		Elements commentNodes = doc.select("#comments>div.comment-item");
+		if (commentNodes.isEmpty()) {
+			throw new PermissionException("豆瓣权限异常，登录豆瓣帐号才能访问该内容。");
+		} else if (commentNodes.size() == 1 && commentNodes.first().select("div.avatar").isEmpty()) {
+			return new DoubanCommentPage();
+		}
+		
 		for (Element commentNode : commentNodes) {
 			comment = new DoubanComment();
 			comment.setUserAvatar(commentNode.select("div.avatar img").first().attr("src"));
@@ -254,13 +275,14 @@ public class VideoParserImp implements VideoParser {
 			if (ratingEles.size() != 0) {
 				comment.setMark(ratingEles.first().attr("title"));
 			}
+			
 			String commentDateStr = commentNode.select("span.comment-time").first().attr("title");
 			try {
 				comment.setCreateDate(DateFormat.getDateInstance().parse(commentDateStr));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-
+			
 			commentList.add(comment);
 		}
 		

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.jebysun.videoparser.tw80s.exception.PermissionException;
 import com.jebysun.videoparser.tw80s.model.DoubanComment;
 import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
@@ -91,8 +92,9 @@ public interface VideoParser {
      * @param pageStart 短评每页开始序号 
      * @return 豆瓣短评页，该对象包含豆瓣短评列表和下一页开始序号
      * @throws IOException
+     * @throws PermissionException
      */
-    DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException;
+    DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException, PermissionException;
     
     /**
      * 相关视频推荐（最多10个视频，通常是10个，可考虑固定大小的数组存放）

@@ -1,6 +1,7 @@
 package com.jebysun.videoparser.tw80s.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class DoubanCommentPage implements Serializable {
 	private List<DoubanComment> commentList;
 	//下一页短评开始序号
 	private int nextPageStart;
+	
+	public DoubanCommentPage() {
+		commentList = new ArrayList<>();
+	}
 	
 	public DoubanCommentPage(List<DoubanComment> commentList, int nextPageStart) {
 		this.commentList = commentList;
