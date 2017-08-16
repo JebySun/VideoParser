@@ -10,11 +10,20 @@ import java.util.Date;
  */
 public class DoubanComment implements Serializable {
 	private static final long serialVersionUID = 8393228485198006735L;
-	
+
+	//豆瓣用户昵称
 	private String userName;
+	//豆瓣用户头像URL
 	private String userAvatar;
+	//豆瓣用户主页
+	private String userPageUrl;
+	//豆瓣用户评论
 	private String comment;
+	//豆瓣用户打分
+	private String mark;
+	//短评创建日期
 	private Date createDate;
+	//投票数
 	private int thumbsUpCount;
 	
 	public String getUserName() {
@@ -47,5 +56,23 @@ public class DoubanComment implements Serializable {
 	public void setThumbsUpCount(int thumbsUpCount) {
 		this.thumbsUpCount = thumbsUpCount;
 	}
+	public String getMark() {
+		return mark;
+	}
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
+	public String getUserPageUrl() {
+		return userPageUrl;
+	}
+	public void setUserPageUrl(String userPageUrl) {
+		this.userPageUrl = userPageUrl;
+	}
 	
 }
+
+
+
+
+
+

@@ -83,20 +83,37 @@ public class Tw80sUtil {
 	 * @param url
 	 * @return
 	 */
-	public static KeywordType getKeywordTypeByURL(String url) {
-		if (url.contains("/movie/")) {
+	public static KeywordType getKeywordTypeByURL(String urlStr) {
+		if (urlStr.contains("/movie/")) {
 			return KeywordType.MOVIE;
-		} else if (url.contains("/ju/")) {
+		} else if (urlStr.contains("/ju/")) {
 			return KeywordType.TV;
-		} else if (url.contains("/zy/")) {
+		} else if (urlStr.contains("/zy/")) {
 			return KeywordType.VARIETY;
-		} else if (url.contains("/dm/")) {
+		} else if (urlStr.contains("/dm/")) {
 			return KeywordType.MANGA;
-		} else if (url.contains("/tag/")) {
+		} else if (urlStr.contains("/tag/")) {
 			return KeywordType.TOPIC;
 		}
 		return KeywordType.OTHER;
 	}
+	
+	/**
+	 * 从下一页URL字符串中获取下一页开始序号，第一页开始序号默认是0。
+	 * @param urlStr 下一页URL字符串
+	 * @return 下一页开始序号
+	 */
+	public static int getPageStartFromUrl(String urlStr) {
+		String paramStr = urlStr.substring(urlStr.indexOf("?") + 1);
+		String[] paramArr = paramStr.split("&");
+		for (String p : paramArr) {
+			if (p.split("=")[0].equals("start")) {
+				return Integer.parseInt(p.split("=")[1]);
+			}
+		}
+		return 0;
+	}
+	
 	
 }
 

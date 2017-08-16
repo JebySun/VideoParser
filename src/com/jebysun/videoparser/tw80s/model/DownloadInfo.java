@@ -9,9 +9,11 @@ import java.io.Serializable;
 public class DownloadInfo implements Serializable {
 	private static final long serialVersionUID = 6274787417408774389L;
 
-	//连接标题
+	//下载视频标题(如:第1集，第2集，第3集...)
 	private String title;
+	//下载地址
 	private String downloadUrl;
+	//文件大小
 	private String fileSize;
 	
 	public String getTitle() {

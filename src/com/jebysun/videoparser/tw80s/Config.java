@@ -38,8 +38,9 @@ final class Config {
 	///////////////////////////////////////////////////////////////////////////
 	
 	
-	//豆瓣短评url
-	public static final String DOUBAN_COMMENTS = "https://movie.douban.com/subject/$doubanVideoId/comments";
+	//豆瓣短评
+	public static final String DOUBAN_COMMENTS = "https://movie.douban.com/subject/$doubanVideoId/comments?start=$pageStart&limit=20&sort=new_score&status=P";
+	
 	
 
 }

@@ -2,11 +2,14 @@ package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.jebysun.videoparser.tw80s.VideoParserImp;
 import com.jebysun.videoparser.tw80s.bak.PostImageParser;
 import com.jebysun.videoparser.tw80s.bak.VideoParseClient;
 import com.jebysun.videoparser.tw80s.bak.VideoParseClient.MovieCallBack;
+import com.jebysun.videoparser.tw80s.model.DoubanComment;
+import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
@@ -22,7 +25,7 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-		testDetail();
+//		testDetail();
 //		testSearch("小新");
 //		testTVlist();
 //		testMangalist();
@@ -30,6 +33,8 @@ public class MovieTest {
 		
 //		testRecommend();
 //		testListTopKeywords();
+		
+		testDoubanComment();
 	}
 	
 	/*
@@ -69,6 +74,22 @@ public class MovieTest {
 				});
 	}
 	*/
+	
+	public static void testDoubanComment() {
+		VideoParser vp = new VideoParserImp();
+		try {
+			DoubanCommentPage page = vp.listDoubanComment("26363254", 0);
+			List<DoubanComment> list = page.getCommentList();
+			System.out.println("本页大小：" + list.size());
+			for (DoubanComment comment : list) {
+				System.out.println("=====================================");
+				printDoubanComment(comment);
+			}
+			System.out.println("下一页开始序号：" + page.getNextPageStart());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	public static void testVideoClient() {
@@ -231,16 +252,22 @@ public class MovieTest {
 		printMapByKeySet(v.getDownloadInfoList());
 	}
 	
-	/**
-	 * 遍历打印Map
-	 * @param map
-	 */
-    public static void printMapByKeySet(List<DownloadInfo> downloadInfoList) {
+    private static void printMapByKeySet(List<DownloadInfo> downloadInfoList) {
         for (DownloadInfo download : downloadInfoList) {  
             System.out.println("下载标题：" + download.getTitle());  
             System.out.println("文件大小：" + download.getFileSize());  
             System.out.println("下载地址：" + download.getDownloadUrl());  
         }  
+    }
+    
+    private static void printDoubanComment(DoubanComment comment) {
+		System.out.println("用户名：" + comment.getUserName());
+		System.out.println("头像：" + comment.getUserAvatar());
+		System.out.println("用户主页：" + comment.getUserPageUrl());
+		System.out.println("打分：" + comment.getMark());
+		System.out.println("评论：" + comment.getComment());
+		System.out.println("投票数：" + comment.getThumbsUpCount());
+		System.out.println("日期：" + comment.getCreateDate());
     }
     
 

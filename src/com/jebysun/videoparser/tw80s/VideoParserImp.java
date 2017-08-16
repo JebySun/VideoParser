@@ -1,6 +1,8 @@
 package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.jebysun.videoparser.tw80s.model.DoubanComment;
+import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
@@ -222,20 +225,47 @@ public class VideoParserImp implements VideoParser {
      * 获取视频的豆瓣短评
      * 说明：豆瓣短评分页开始序号不按常理，并且未登陆豆瓣帐号的情况下只能获取前几页数据。
      * @param doubanVideoId 豆瓣视频ID
-     * @param pageIndex 分页序号
-     * @return 豆瓣短评列表
+     * @param pageStart 短评每页开始序号 
+     * @return 豆瓣短评页数据
      * @throws IOException
      */
 	@Override
-	public List<DoubanComment> listDoubanComment(String doubanVideoId, int pageIndex) throws IOException {
+	public DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException {
 		List<DoubanComment> commentList = new ArrayList<>();
+		DoubanComment comment = null;
+		
 		String doubanVideoUrl = Config.DOUBAN_COMMENTS;
 		doubanVideoUrl = doubanVideoUrl.replaceFirst("\\$doubanVideoId", doubanVideoId);
-		
+		doubanVideoUrl = doubanVideoUrl.replaceFirst("\\$pageStart", String.valueOf(pageStart));
 		Document doc = Jsoup.connect(doubanVideoUrl).timeout(Config.TIMEOUT * 1000).get();
-		// TODO 豆瓣短评解析，现在的问题是豆瓣短评的翻页序号没搞清楚。
-		Elements videoNodes = doc.select("ul.me1>li");
-		return commentList;
+		Elements commentNodes = doc.select("#comments>div.comment-item");
+		for (Element commentNode : commentNodes) {
+			comment = new DoubanComment();
+			comment.setUserAvatar(commentNode.select("div.avatar img").first().attr("src"));
+			String commentContent = commentNode.select("p").last().text();
+			comment.setComment(commentContent);
+			String voteStr = commentNode.select("span.votes").first().ownText();
+			comment.setThumbsUpCount(Integer.parseInt(voteStr));
+			Element userNameNode = commentNode.select("span.comment-info>a").first();
+			comment.setUserName(userNameNode.ownText());
+			comment.setUserPageUrl(userNameNode.attr("href"));
+			Elements ratingEles = commentNode.select("span.rating");
+			//有可能没打分
+			if (ratingEles.size() != 0) {
+				comment.setMark(ratingEles.first().attr("title"));
+			}
+			String commentDateStr = commentNode.select("span.comment-time").first().attr("title");
+			try {
+				comment.setCreateDate(DateFormat.getDateInstance().parse(commentDateStr));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			commentList.add(comment);
+		}
+		
+		String nextPageUrl = doc.select("#paginator a.next").first().attr("href");
+		return new DoubanCommentPage(commentList, Tw80sUtil.getPageStartFromUrl(nextPageUrl));
 	}
 
     /**
@@ -658,7 +688,6 @@ public class VideoParserImp implements VideoParser {
 			v.setName(name);
 			v.setDetailUrl(Config.DOMAIN + path);
 			v.setVideoType(Tw80sUtil.getVideoTypeByURL(path));
-			v.setVideoType(VideoType.MOVIE);
 			if (v.getVideoType() == VideoType.OTHER) {
 				continue;
 			}

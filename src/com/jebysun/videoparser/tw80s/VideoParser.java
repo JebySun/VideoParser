@@ -2,8 +2,10 @@ package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.jebysun.videoparser.tw80s.model.DoubanComment;
+import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
 
@@ -84,12 +86,13 @@ public interface VideoParser {
     List<SearchKeyword> listTopKeyword() throws IOException;
     
     /**
-     * 获取视频的豆瓣短评
+     * 分页获取视频的豆瓣短评
      * @param doubanVideoId 豆瓣视频ID
-     * @return 豆瓣短评列表
+     * @param pageStart 短评每页开始序号 
+     * @return 豆瓣短评页，该对象包含豆瓣短评列表和下一页开始序号
      * @throws IOException
      */
-    List<DoubanComment> listDoubanComment(String doubanVideoId, int pageIndex) throws IOException;
+    DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException;
     
     /**
      * 相关视频推荐（最多10个视频，通常是10个，可考虑固定大小的数组存放）
