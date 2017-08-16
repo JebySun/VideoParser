@@ -39,13 +39,12 @@ public class MovieTest {
 	}
 	
 	/*
-	 * 最佳接口
+	 * TODO 设计最佳接口
 	public static void bestClientAPI() {
-		VideoParser.listMoivie(1)
-				.category("")
-				.year()
-				...
-				.list(new Callback() {
+		MovieQueryParam map = new MovieQueryParam();
+		VideoParser.doAction(ParseAction.LIST_MOVIE)
+				.paramObject(MovieQueryParam)
+				.list(new VideoListCallback() {
 					public void success(List<Video> list) {
 						
 					}
@@ -54,8 +53,9 @@ public class MovieTest {
 					}
 				});
 		
-		VideoParser.getVideoDetail("")
-				.get(new Callback() {
+		VideoParser.doAction(ParseAction.VIDEO_DETAIL)
+				.param(url)
+				.get(new DetailCallback() {
 					public void success(List<Video> list) {
 						
 					}
@@ -64,8 +64,9 @@ public class MovieTest {
 					}
 				});
 		
-		VideoParser.searchVideo("")
-				.search(new Callback() {
+		VideoParser.doAction(ParseAction.SEARCH)
+				.param(keyword)
+				.search(new SearchCallback() {
 					public void success(List<Video> list) {
 						
 					}
