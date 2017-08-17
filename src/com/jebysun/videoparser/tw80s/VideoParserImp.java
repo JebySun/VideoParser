@@ -200,9 +200,13 @@ public class VideoParserImp implements VideoParser {
 			storyNode = doc.select("div#movie_content").get(0);
 		}
 		//移除“剧情介绍”标题
-		storyNode.select("span").get(0).remove();
-		String story = storyNode.text().replaceAll("　", "").trim();
-		v.setStory(story);
+		if (!storyNode.select("span").isEmpty()) {
+			storyNode.select("span").first().remove();
+		}
+		if (!storyNode.select("a").isEmpty()) {
+			storyNode.select("a").last().remove();
+		}
+		v.setStory(storyNode.text().replaceAll("编辑整理", "").replaceAll("　", "").trim());
 		
 		//下载地址
 		/* 下载地址非常多时，视频详情页只显示部分下载地址，全部下载地址需要到另一个页面解析。

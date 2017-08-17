@@ -26,7 +26,7 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-//		testDetail();
+		testDetail();
 //		testSearch("小新");
 //		testTVlist();
 //		testMangalist();
@@ -35,7 +35,7 @@ public class MovieTest {
 //		testRecommend();
 //		testListTopKeywords();
 		
-		testDoubanComment();
+//		testDoubanComment();
 	}
 	
 	/*
@@ -80,7 +80,7 @@ public class MovieTest {
 	public static void testDoubanComment() {
 		VideoParser vp = new VideoParserImp();
 		try {
-			DoubanCommentPage page = vp.listDoubanComment("26363254", 2000);
+			DoubanCommentPage page = vp.listDoubanComment("26363254", 20);
 			List<DoubanComment> list = page.getCommentList();
 			System.out.println("本页大小：" + list.size());
 			for (DoubanComment comment : list) {
@@ -192,10 +192,11 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-		String url = "http://www.80s.tw/movie/19412";
+//		String url = "http://www.80s.tw/movie/19412";
 //		String url = "http://www.80s.tw/movie/21252";
-//		String url = "http://www.80s.tw/movie/273";
 //		String url = "http://www.80s.tw/ju/19249";
+//		String url = "http://www.80s.tw/dm/3108";
+		String url = "http://www.80s.tw/zy/21216";
 		try {
 			VideoParser vp = new VideoParserImp();
 			Video v = vp.getVideoDetail(url);
