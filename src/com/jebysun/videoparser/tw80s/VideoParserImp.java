@@ -3,6 +3,7 @@ package com.jebysun.videoparser.tw80s;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -264,6 +265,7 @@ public class VideoParserImp implements VideoParser {
 			return new DoubanCommentPage();
 		}
 		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for (Element commentNode : commentNodes) {
 			comment = new DoubanComment();
 			comment.setUserAvatar(commentNode.select("div.avatar img").first().attr("src"));
@@ -282,7 +284,7 @@ public class VideoParserImp implements VideoParser {
 			
 			String commentDateStr = commentNode.select("span.comment-time").first().attr("title");
 			try {
-				comment.setCreateDate(DateFormat.getDateInstance().parse(commentDateStr));
+	            comment.setCreateDate(simpleDateFormat.parse(commentDateStr));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

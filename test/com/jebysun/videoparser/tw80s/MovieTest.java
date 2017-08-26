@@ -1,6 +1,10 @@
 package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +30,7 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-		testDetail();
+//		testDetail();
 //		testSearch("小新");
 //		testTVlist();
 //		testMangalist();
@@ -36,6 +40,15 @@ public class MovieTest {
 //		testListTopKeywords();
 		
 //		testDoubanComment();
+		try {
+			
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date d = simpleDateFormat.parse("2016-5-02");
+			System.out.println(d);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/*
@@ -80,7 +93,7 @@ public class MovieTest {
 	public static void testDoubanComment() {
 		VideoParser vp = new VideoParserImp();
 		try {
-			DoubanCommentPage page = vp.listDoubanComment("26363254", 20);
+			DoubanCommentPage page = vp.listDoubanComment("26363254", 0);
 			List<DoubanComment> list = page.getCommentList();
 			System.out.println("本页大小：" + list.size());
 			for (DoubanComment comment : list) {
@@ -272,7 +285,7 @@ public class MovieTest {
 		System.out.println("打分：" + comment.getMark());
 		System.out.println("评论：" + comment.getComment());
 		System.out.println("投票数：" + comment.getThumbsUpCount());
-		System.out.println("日期：" + comment.getCreateDate());
+		System.out.println("日期：" + new SimpleDateFormat("yyyy-MM-dd").format(comment.getCreateDate()));
     }
     
 
