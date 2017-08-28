@@ -241,6 +241,9 @@ public class VideoParserImp implements VideoParser {
 	public DoubanCommentPage listDoubanComment(String doubanVideoId, int pageStart) throws IOException, PermissionException {
 		List<DoubanComment> commentList = new ArrayList<>();
 		DoubanComment comment = null;
+		if (doubanVideoId == null) {
+			return new DoubanCommentPage();
+		}
 		
 		String doubanVideoUrl = Config.DOUBAN_COMMENTS;
 		doubanVideoUrl = doubanVideoUrl.replaceFirst("\\$doubanVideoId", doubanVideoId);
@@ -323,8 +326,13 @@ public class VideoParserImp implements VideoParser {
 				imgPath = "http:" + imgPath;
 			}
 			v.setPosterUrl(imgPath);
-			v.setScore(scoreNode.text());
-			v.setNote(noteNode.text());
+			
+			if (scoreNode != null) {
+				v.setScore(scoreNode.text());
+			}
+			if (noteNode != null) {
+				v.setNote(noteNode.text());
+			}
 			v.setVideoType(Tw80sUtil.getVideoTypeByURL(videoUrl));
 			videoList.add(v);
 		}

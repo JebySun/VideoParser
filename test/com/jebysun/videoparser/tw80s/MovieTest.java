@@ -36,10 +36,10 @@ public class MovieTest {
 //		testMangalist();
 //		testVarietylist();
 		
-//		testRecommend();
+		testRecommend();
 //		testListTopKeywords();
 		
-		testDoubanComment();
+//		testDoubanComment();
 	}
 	
 	/*
@@ -211,7 +211,7 @@ public class MovieTest {
 	}
 	
 	private static void testRecommend() {
-		String url = "http://www.80s.tw/movie/21252";
+		String url = "http://www.80s.tw/zy/20527";
 		try {
 			VideoParser vp = new VideoParserImp();
 			List<Video> videoList = vp.listRecommendVideo(url);
