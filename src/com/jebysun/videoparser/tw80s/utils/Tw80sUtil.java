@@ -1,5 +1,6 @@
 package com.jebysun.videoparser.tw80s.utils;
 
+import com.jebysun.videoparser.tw80s.model.DoubanComment;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword.KeywordType;
 import com.jebysun.videoparser.tw80s.model.Video.VideoType;
 
@@ -113,6 +114,32 @@ public class Tw80sUtil {
 		}
 		return 0;
 	}
+	
+	
+    public static DoubanComment.RatingLevel convertRatingStringToEnum(String mark) {
+    	DoubanComment.RatingLevel ratingLevel;
+        switch(mark) {
+            case "很差":
+            	ratingLevel = DoubanComment.RatingLevel.LEVEL_1;
+                break;
+            case "较差":
+            	ratingLevel = DoubanComment.RatingLevel.LEVEL_2;
+                break;
+            case "还行":
+            	ratingLevel = DoubanComment.RatingLevel.LEVEL_3;
+                break;
+            case "推荐":
+            	ratingLevel = DoubanComment.RatingLevel.LEVEL_4;
+                break;
+            case "力荐":
+            	ratingLevel = DoubanComment.RatingLevel.LEVEL_5;
+                break;
+            default:
+            	ratingLevel = DoubanComment.RatingLevel.LEVEL_3;
+                break;
+        }
+        return ratingLevel;
+    }
 	
 	
 }

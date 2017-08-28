@@ -20,7 +20,7 @@ public class DoubanComment implements Serializable {
 	//豆瓣用户评论
 	private String comment;
 	//豆瓣用户打分
-	private String mark;
+	private RatingLevel ratingLevel;
 	//短评创建日期
 	private Date createDate;
 	//投票数
@@ -56,11 +56,12 @@ public class DoubanComment implements Serializable {
 	public void setThumbsUpCount(int thumbsUpCount) {
 		this.thumbsUpCount = thumbsUpCount;
 	}
-	public String getMark() {
-		return mark;
+	
+	public RatingLevel getRatingLevel() {
+		return ratingLevel;
 	}
-	public void setMark(String mark) {
-		this.mark = mark;
+	public void setRatingLevel(RatingLevel ratingLevel) {
+		this.ratingLevel = ratingLevel;
 	}
 	public String getUserPageUrl() {
 		return userPageUrl;
@@ -68,6 +69,26 @@ public class DoubanComment implements Serializable {
 	public void setUserPageUrl(String userPageUrl) {
 		this.userPageUrl = userPageUrl;
 	}
+	
+	
+	public enum RatingLevel {
+		LEVEL_1("很差"),
+		LEVEL_2("较差"),
+		LEVEL_3("还行"),
+		LEVEL_4("推荐"),
+		LEVEL_5("力荐");
+		private String ratingValue;
+		private RatingLevel(String ratingValue) {
+			this.ratingValue = ratingValue;
+		}
+		
+		public String getRatingValue() {
+			return ratingValue;
+		}
+		
+	}
+	
+	
 	
 }
 

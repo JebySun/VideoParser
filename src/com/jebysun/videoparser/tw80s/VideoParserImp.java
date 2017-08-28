@@ -279,7 +279,7 @@ public class VideoParserImp implements VideoParser {
 			Elements ratingEles = commentNode.select("span.rating");
 			//有可能没打分
 			if (ratingEles.size() != 0) {
-				comment.setMark(ratingEles.first().attr("title"));
+				comment.setRatingLevel(Tw80sUtil.convertRatingStringToEnum(ratingEles.first().attr("title")));
 			}
 			
 			String commentDateStr = commentNode.select("span.comment-time").first().attr("title");

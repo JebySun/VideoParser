@@ -39,16 +39,7 @@ public class MovieTest {
 //		testRecommend();
 //		testListTopKeywords();
 		
-//		testDoubanComment();
-		try {
-			
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date d = simpleDateFormat.parse("2016-5-02");
-			System.out.println(d);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		testDoubanComment();
 	}
 	
 	/*
@@ -282,7 +273,7 @@ public class MovieTest {
 		System.out.println("用户名：" + comment.getUserName());
 		System.out.println("头像：" + comment.getUserAvatar());
 		System.out.println("用户主页：" + comment.getUserPageUrl());
-		System.out.println("打分：" + comment.getMark());
+		System.out.println("打分：" + comment.getRatingLevel().getRatingValue());
 		System.out.println("评论：" + comment.getComment());
 		System.out.println("投票数：" + comment.getThumbsUpCount());
 		System.out.println("日期：" + new SimpleDateFormat("yyyy-MM-dd").format(comment.getCreateDate()));
