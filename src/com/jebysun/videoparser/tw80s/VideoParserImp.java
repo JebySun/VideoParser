@@ -104,7 +104,10 @@ public class VideoParserImp implements VideoParser {
 	public Video getVideoDetail(String url) throws IOException {
 		Video v = new Video();
 		
-		Document doc = Jsoup.connect(url).timeout(Config.TIMEOUT * 1000).get();
+		Document doc = Jsoup.connect(url)
+				.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36")
+				.timeout(Config.TIMEOUT * 1000)
+				.get();
 		
 		//电影详情地址
 		v.setDetailUrl(url);
@@ -631,6 +634,7 @@ public class VideoParserImp implements VideoParser {
 	 */
 	private static Document getDocument(String url, int timeout, int maxBodySize) throws IOException {
 		Connection conn = Jsoup.connect(url);
+		conn = conn.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
 		if (timeout > 0) {
 			conn = conn.timeout(timeout * 1000);
 		}

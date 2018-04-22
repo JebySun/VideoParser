@@ -2,7 +2,7 @@ package com.jebysun.videoparser.tw80s;
 
 /**
  * 资源配置
- * 80s电影 http://www.80s.tw
+ * 80s电影 https://www.80s.tw
  * @author Jeby Sun
  * @Date 2015-12-14
  */
@@ -11,7 +11,7 @@ final class Config {
 	private Config() {}
 	
 	//影视资源域名
-	public static final String DOMAIN = "http://www.80s.tw";
+	public static final String DOMAIN = "https://www.80s.tw";
 	
 	//电影分类 参数依次为类别，年份，地区，语言，排序，分页序号
 	public static final String MOVIE_QUERY_PATH = "/movie/list/$category-$year-$area-$language-$sort-$page";

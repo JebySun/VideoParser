@@ -2,10 +2,8 @@ package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import com.jebysun.videoparser.tw80s.exception.PermissionException;
-import com.jebysun.videoparser.tw80s.model.DoubanComment;
 import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;

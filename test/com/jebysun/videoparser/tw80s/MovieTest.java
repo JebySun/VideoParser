@@ -30,13 +30,13 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-//		testDetail();
+		testDetail();
 //		testSearch("小新");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 		
-		testRecommend();
+//		testRecommend();
 //		testListTopKeywords();
 		
 //		testDoubanComment();
@@ -196,11 +196,7 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-//		String url = "http://www.80s.tw/movie/19412";
-//		String url = "http://www.80s.tw/movie/21252";
-//		String url = "http://www.80s.tw/ju/19249";
-//		String url = "http://www.80s.tw/dm/3108";
-		String url = "http://www.80s.tw/zy/21216";
+		String url = "https://www.80s.tw/ju/22520";
 		try {
 			VideoParser vp = new VideoParserImp();
 			Video v = vp.getVideoDetail(url);
