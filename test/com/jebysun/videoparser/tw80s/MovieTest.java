@@ -1,7 +1,6 @@
 package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,13 +29,13 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-		testDetail();
-//		testSearch("小新");
+//		testDetail();
+//		testSearch("狗");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 		
-//		testRecommend();
+		testRecommend();
 //		testListTopKeywords();
 		
 //		testDoubanComment();
@@ -128,7 +127,7 @@ public class MovieTest {
 	private static void testMoiveList() {
 		try {
 			VideoParser vp = new VideoParserImp();
-			List<Video> videoList = vp.listMovie(MovieQueryParam.CATEGORY_DONGZUO, null, null, null, null, 1);
+			List<Video> videoList = vp.listMovie(null, null, null, null, null, 1);
 			for (Video v : videoList) {
 				System.out.println(v.getName());
 				System.out.println(v.getPosterUrl());
@@ -207,7 +206,7 @@ public class MovieTest {
 	}
 	
 	private static void testRecommend() {
-		String url = "http://www.80s.tw/zy/20527";
+		String url = "https://www.80s.tw/zy/20527";
 		try {
 			VideoParser vp = new VideoParserImp();
 			List<Video> videoList = vp.listRecommendVideo(url);

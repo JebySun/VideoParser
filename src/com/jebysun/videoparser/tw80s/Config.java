@@ -31,7 +31,7 @@ final class Config {
 	public static final String VIDEO_SEARCH_PATH = "/search";
 	
 	//获取信息超时时间(秒)
-	public static final int TIMEOUT = 10;
+	public static final int TIMEOUT = 15;
 	
 	
 	

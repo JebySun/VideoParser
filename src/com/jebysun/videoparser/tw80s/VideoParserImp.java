@@ -1,7 +1,6 @@
 package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -104,10 +103,7 @@ public class VideoParserImp implements VideoParser {
 	public Video getVideoDetail(String url) throws IOException {
 		Video v = new Video();
 		
-		Document doc = Jsoup.connect(url)
-				.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36")
-				.timeout(Config.TIMEOUT * 1000)
-				.get();
+		Document doc = getDocument(url, Config.TIMEOUT, 0);
 		
 		//电影详情地址
 		v.setDetailUrl(url);
@@ -256,6 +252,7 @@ public class VideoParserImp implements VideoParser {
 			doc = Jsoup.connect(doubanVideoUrl)
 					.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36")
 					.timeout(Config.TIMEOUT * 1000)
+					.validateTLSCertificates(false)
 					.get();
 		} catch (HttpStatusException e) {
 //			e.printStackTrace();
@@ -311,7 +308,9 @@ public class VideoParserImp implements VideoParser {
 	@Override
 	public List<Video> listRecommendVideo(String videoUrl) throws IOException {
 		List<Video> videoList = new ArrayList<>();
-		Document doc = Jsoup.connect(videoUrl).timeout(Config.TIMEOUT * 1000).get();
+		
+		Document doc = getDocument(videoUrl, Config.TIMEOUT, 0);
+
 		Elements videoNodes = doc.select("ul.me1>li");
 		Video v = null;
 		for (Element videoNode : videoNodes) {
@@ -410,6 +409,7 @@ public class VideoParserImp implements VideoParser {
 		param.put("pageIndex", pageIndex);
 		String queryUrl = buildQueryUrl(Config.MOVIE_QUERY_PATH, param);
 		String url = Config.DOMAIN + queryUrl;
+		System.out.println(url);
 		//获取文档
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
 		//解析视频列表
@@ -607,7 +607,7 @@ public class VideoParserImp implements VideoParser {
 	}
 	
 	/**
-	 * 获取完整下载地址
+	 * 获取全部下载地址
 	 * @param downloadPageUrl
 	 * @return
 	 * @throws IOException
@@ -634,13 +634,15 @@ public class VideoParserImp implements VideoParser {
 	 */
 	private static Document getDocument(String url, int timeout, int maxBodySize) throws IOException {
 		Connection conn = Jsoup.connect(url);
+		//设置UserAgent模拟Chrome55发出请求
 		conn = conn.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
-		if (timeout > 0) {
-			conn = conn.timeout(timeout * 1000);
-		}
-		if (maxBodySize > 0) {
-			conn = conn.maxBodySize(maxBodySize);
-		}
+		//避免出现CertPathValidatorException
+		conn = conn.validateTLSCertificates(false);
+		//不跟随重定向
+		conn.followRedirects(false);
+		conn.header("Referer", "https://www.baidu.com/");
+		conn = conn.timeout(timeout * 1000);
+		conn = conn.maxBodySize(maxBodySize);
 		return conn.get();
 	}
 	
