@@ -367,7 +367,7 @@ public class VideoParserImp implements VideoParser {
 	@Override
 	public List<SearchKeyword> listTopKeyword() throws IOException {
 		List<SearchKeyword> keywordList = new ArrayList<>();
-		Document doc = Jsoup.connect(Config.DOMAIN).timeout(Config.TIMEOUT * 1000).get();
+		Document doc = getDocument(Config.DOMAIN, Config.TIMEOUT, 0);
 		Elements keywordsNodes = doc.select("#hot-words>li>a");
 		SearchKeyword keyword = null;
 		for (Element node : keywordsNodes) {
