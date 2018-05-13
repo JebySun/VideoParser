@@ -250,7 +250,7 @@ public class VideoParserImp implements VideoParser {
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(doubanVideoUrl)
-					.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36")
+					.userAgent(Config.USER_AGENT)
 					.timeout(Config.TIMEOUT * 1000)
 					.validateTLSCertificates(false)
 					.get();
@@ -635,12 +635,13 @@ public class VideoParserImp implements VideoParser {
 	private static Document getDocument(String url, int timeout, int maxBodySize) throws IOException {
 		Connection conn = Jsoup.connect(url);
 		//设置UserAgent模拟Chrome55发出请求
-		conn = conn.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+		conn = conn.userAgent(Config.USER_AGENT);
 		//避免出现CertPathValidatorException
 		conn = conn.validateTLSCertificates(false);
 		//不跟随重定向
-		conn.followRedirects(false);
-		conn.header("Referer", "https://www.baidu.com/");
+//		conn.followRedirects(false);
+//		conn.header("Host", "www.80s.tw");
+//		conn.header("Referer", "https://www.80s.tw/");
 		conn = conn.timeout(timeout * 1000);
 		conn = conn.maxBodySize(maxBodySize);
 		return conn.get();
