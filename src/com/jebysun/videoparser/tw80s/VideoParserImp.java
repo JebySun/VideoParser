@@ -353,7 +353,10 @@ public class VideoParserImp implements VideoParser {
 		
 		Document doc = Jsoup.connect(searchUrl)
 				.timeout(Config.TIMEOUT * 1000)
+				.userAgent(Config.USER_AGENT)
+				.validateTLSCertificates(false)
 				.data("keyword", keyword)
+				.maxBodySize(0)
 				.post();
 		
 		return parseSearchVideoList(doc);
@@ -366,20 +369,43 @@ public class VideoParserImp implements VideoParser {
      */
 	@Override
 	public List<SearchKeyword> listTopKeyword() throws IOException {
-		List<SearchKeyword> keywordList = new ArrayList<>();
-		Document doc = getDocument(Config.DOMAIN, Config.TIMEOUT, 0);
-		Elements keywordsNodes = doc.select("#hot-words>li>a");
-		SearchKeyword keyword = null;
-		for (Element node : keywordsNodes) {
-			keyword = new SearchKeyword();
-			keyword.setTitle(node.text());
-			keyword.setLink(Config.DOMAIN + node.attr("href"));
-			keyword.setType(Tw80sUtil.getKeywordTypeByURL(keyword.getLink()));
-			keywordList.add(keyword);
+		//从全局缓存中读取搜索热词，如果不为空，则直接返回结果，不必再从服务端获取。
+		List<SearchKeyword> keywordList = CacheSingleton.getVideoSearchWord();
+		if (keywordList != null) {
+			return keywordList;
 		}
+		
+		Document doc = getDocument(Config.DOMAIN, Config.TIMEOUT, 0);
+		keywordList = parseVideoSearchWord(doc);
+
 		return keywordList;
 	}
 
+	/**
+	 * 获取视频海报地址
+	 * 【说明】
+	 * 1.搜索后直接再循环获取海报等待时间太长,因此开放成单独的API，需要才调用；
+	 * 2.如果一定要在搜索结果后直接获取海报，可以考虑优开多线程同时获取每个视频的海报。
+	 * @param videoUrl 视频详情地址
+	 * @return 视频海报地址
+	 * @throws IOException
+	 */
+	@Override
+	public String getVideoPosterUrl(String videoUrl) throws IOException {
+		Document doc = getDocument(videoUrl, Config.TIMEOUT, 0);
+		//电影海报
+		Element imgElement = doc.select("div#minfo>div.img>img").get(0);
+		String imgPosterUrl = imgElement.attr("src");
+		
+		if (imgPosterUrl != null && !imgPosterUrl.startsWith("http")) {
+			imgPosterUrl = "http:" + imgPosterUrl;
+			if (imgPosterUrl.lastIndexOf(".") == imgPosterUrl.length()-4) {
+				return imgPosterUrl;
+			}
+		}
+		
+		return null;
+	}
 	
 	
 	
@@ -399,7 +425,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 * @throws IOException
 	 */
-	private static List<Video> listMovie(String category, String area, String language, String year, String sort, String pageIndex) throws IOException {
+	private List<Video> listMovie(String category, String area, String language, String year, String sort, String pageIndex) throws IOException {
 		Map<String, String> param = new HashMap<>();
 		param.put("category", category);
 		param.put("area", area);
@@ -409,12 +435,14 @@ public class VideoParserImp implements VideoParser {
 		param.put("pageIndex", pageIndex);
 		String queryUrl = buildQueryUrl(Config.MOVIE_QUERY_PATH, param);
 		String url = Config.DOMAIN + queryUrl;
-		System.out.println(url);
 		//获取文档
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
+		//解析热门影视搜索关键字列表
+		parseVideoSearchWord(doc);
 		//解析视频列表
 		return parseSimpleVideoList(doc);
 	}
+	
 	
 	/**
 	 * 电视剧查询列表
@@ -426,7 +454,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 * @throws IOException
 	 */
-	private static List<Video> listTV(String category, String area, String year, String sort, String pageIndex) throws IOException {
+	private List<Video> listTV(String category, String area, String year, String sort, String pageIndex) throws IOException {
 		Map<String, String> param = new HashMap<>();
 		param.put("category", category);
 		param.put("area", area);
@@ -437,6 +465,8 @@ public class VideoParserImp implements VideoParser {
 		String url = Config.DOMAIN + queryUrl;
 		System.out.println(url);
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
+		//解析热门影视搜索关键字列表
+		parseVideoSearchWord(doc);
 		return parseSimpleVideoList(doc);
 	}
 	
@@ -449,7 +479,7 @@ public class VideoParserImp implements VideoParser {
 	 * @throws IOException
 	 * @author Jeby Sun
 	 */
-	private static List<Video> listManga(String type, String sort, String pageIndex) throws IOException {
+	private List<Video> listManga(String type, String sort, String pageIndex) throws IOException {
 		Map<String, String> param = new HashMap<>();
 		param.put("type", type);
 		param.put("sort", sort);
@@ -457,6 +487,8 @@ public class VideoParserImp implements VideoParser {
 		String queryUrl = buildQueryUrl(Config.MANGA_QUERY_PATH, param);
 		String url = Config.DOMAIN + queryUrl;
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
+		//解析热门影视搜索关键字列表
+		parseVideoSearchWord(doc);
 		return parseSimpleVideoList(doc);
 	}
 	
@@ -468,13 +500,15 @@ public class VideoParserImp implements VideoParser {
 	 * @throws IOException
 	 * @author Jeby Sun
 	 */
-	private static List<Video> listVariety(String sort, String pageIndex) throws IOException {
+	private List<Video> listVariety(String sort, String pageIndex) throws IOException {
 		Map<String, String> param = new HashMap<>();
 		param.put("sort", sort);
 		param.put("pageIndex", pageIndex);
 		String queryUrl = buildQueryUrl(Config.VARIETY_QUERY_PATH, param);
 		String url = Config.DOMAIN + queryUrl;
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
+		//解析热门影视搜索关键字列表
+		parseVideoSearchWord(doc);
 		return parseSimpleVideoList(doc);
 	}
 	
@@ -484,7 +518,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 */
 	@Deprecated
-	private static List<Video> parseVarietyList(Document doc) {
+	private List<Video> parseVarietyList(Document doc) {
 		List<Video> videos = new ArrayList<>();
 		Video v = null;
 		Elements elements = doc.select("ul.zy>li");
@@ -513,7 +547,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 * @author Jeby Sun
 	 */
-	private static String buildQueryUrl(String queryUrl, Map<String, String> param) {
+	private String buildQueryUrl(String queryUrl, Map<String, String> param) {
 		queryUrl = paramReplace(queryUrl, "\\$category", param.get("category"));
 		queryUrl = paramReplace(queryUrl, "\\$area", param.get("area"));
 		queryUrl = paramReplace(queryUrl, "\\$language", param.get("language"));
@@ -532,7 +566,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 * @author Jeby Sun
 	 */
-	private static String paramReplace(String url, String pname, String pvalue) {
+	private String paramReplace(String url, String pname, String pvalue) {
 		pvalue = (pvalue==null) ? "" : pvalue;
 		return url.replaceFirst(pname, pvalue);
 	}
@@ -544,7 +578,7 @@ public class VideoParserImp implements VideoParser {
 	 * @param sArr
 	 * @return
 	 */
-	private static Video fillBaseInfo(Video v, String[] sArr) {
+	private Video fillBaseInfo(Video v, String[] sArr) {
 		String key = sArr[0].trim();
 		String value = sArr[1].trim();
 		switch(key) {
@@ -581,7 +615,7 @@ public class VideoParserImp implements VideoParser {
 	 * @param doc
 	 * @return
 	 */
-	private static List<DownloadInfo> parseDownloadInfo(Document doc) {
+	private List<DownloadInfo> parseDownloadInfo(Document doc) {
 		List<DownloadInfo> downloadInfoList = new ArrayList<>();
 		Elements urlNodes = doc.select("ul.dllist1>li:not(.nohover)");
 		DownloadInfo downloadInfo = null;
@@ -613,7 +647,7 @@ public class VideoParserImp implements VideoParser {
 	 * @throws IOException
 	 */
 	@Deprecated
-	private static List<DownloadInfo> getAllDownloadUrl(String downloadPageUrl) throws IOException {
+	private List<DownloadInfo> getAllDownloadUrl(String downloadPageUrl) throws IOException {
 		
 		Document doc = Jsoup.connect(downloadPageUrl)
 				.timeout(Config.TIMEOUT * 1000)
@@ -632,7 +666,7 @@ public class VideoParserImp implements VideoParser {
 	 * @throws IOException
 	 * @author Jeby Sun
 	 */
-	private static Document getDocument(String url, int timeout, int maxBodySize) throws IOException {
+	private Document getDocument(String url, int timeout, int maxBodySize) throws IOException {
 		Connection conn = Jsoup.connect(url);
 		//设置UserAgent模拟Chrome55发出请求
 		conn = conn.userAgent(Config.USER_AGENT);
@@ -651,8 +685,9 @@ public class VideoParserImp implements VideoParser {
 	 * 解析根据关键字搜索到的视频信息列表。
 	 * @param doc - 要解析的HTML文档
 	 * @return - 解析结果，List<Video>集合
+	 * @throws IOException 
 	 */
-	private static List<Video> parseSearchVideoList(Document doc) {
+	private List<Video> parseSearchVideoList(Document doc) {
 		List<Video> videos = new ArrayList<>();
 		//判断是不是没有搜索结果
 		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
@@ -663,14 +698,14 @@ public class VideoParserImp implements VideoParser {
 		Elements elements = doc.select("#block3 ul.search_list>li");
 		Video v = null;
 		for (Element e : elements) {
-			v = new Video();
 			Element nameEle = e.select("a").get(0);
-			v.setName(nameEle.text());
-			v.setDetailUrl(Config.DOMAIN + nameEle.attr("href"));
-			v.setVideoType(Tw80sUtil.getVideoTypeByTitle(nameEle.text()));
-			if (v.getVideoType() == VideoType.OTHER) {
+			String videoTitle = nameEle.text();
+			if (Tw80sUtil.getVideoTypeByTitle(videoTitle) == VideoType.OTHER) {
 				continue;
 			}
+			v = new Video();
+			v.setName(videoTitle);
+			v.setDetailUrl(Config.DOMAIN + nameEle.attr("href"));
 			v.setAlias(e.ownText());
 			Elements ems = e.select("em");
 			if (ems.size() == 2) {
@@ -689,12 +724,13 @@ public class VideoParserImp implements VideoParser {
 		return videos;
 	}
 	
+	
 	/**
 	 * 解析简单的视频列表，即视频列表需要的信息。
 	 * @param doc - 要解析的HTML文档
 	 * @return - 解析结果，List<Video>集合
 	 */
-	private static List<Video> parseSimpleVideoList(Document doc) {
+	private List<Video> parseSimpleVideoList(Document doc) {
 		List<Video> videos = new ArrayList<>();
 		//判断是不是空
 		Elements isEmptyResultElemts = doc.select("#block3 div.nomoviesinfo");
@@ -746,7 +782,7 @@ public class VideoParserImp implements VideoParser {
 	 * @return
 	 */
 	@Deprecated
-	private static String getDownloadPageUrl(String url, Element e) {
+	private String getDownloadPageUrl(String url, Element e) {
 		//解析获取全部下载地址的URL
 		String methodStr = e.select("span").get(0).attr("onclick");
 		String levelStr =  methodStr.split("'")[1];
@@ -768,7 +804,25 @@ public class VideoParserImp implements VideoParser {
 		return doubanVideoId;
 	}
 	
-	
+	/**
+	 * 从网页Document中解析热门视频关键字列表
+	 * @param doc
+	 */
+	private List<SearchKeyword> parseVideoSearchWord(Document doc) {
+		List<SearchKeyword> keywordList = new ArrayList<>();
+		Elements keywordsNodes = doc.select("#hot-words>li>a");
+		SearchKeyword keyword = null;
+		for (Element node : keywordsNodes) {
+			keyword = new SearchKeyword();
+			keyword.setTitle(node.text());
+			keyword.setLink(Config.DOMAIN + node.attr("href"));
+			keyword.setType(Tw80sUtil.getKeywordTypeByURL(keyword.getLink()));
+			keywordList.add(keyword);
+		}
+		// 写入全局缓存
+		CacheSingleton.putVideoSearchWord(keywordList);
+		return keywordList;
+	}
 	
 	
 }

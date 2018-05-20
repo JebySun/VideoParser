@@ -102,6 +102,13 @@ public interface VideoParser {
      */
     List<Video> listRecommendVideo(String videoUrl) throws IOException;
     
+    /**
+     * 根据视频地址获取视频海报地址
+     * @param videoUrl
+     * @return
+     */
+    String getVideoPosterUrl(String videoUrl) throws IOException;
+    
 }
 
 

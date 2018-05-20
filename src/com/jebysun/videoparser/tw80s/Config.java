@@ -31,7 +31,7 @@ final class Config {
 	public static final String VIDEO_SEARCH_PATH = "/search";
 	
 	//获取信息超时时间(秒)
-	public static final int TIMEOUT = 15;
+	public static final int TIMEOUT = 30;
 	
 	//http请求头user-agent
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";

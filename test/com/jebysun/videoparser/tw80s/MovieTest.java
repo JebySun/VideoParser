@@ -26,19 +26,21 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-//		testMoiveList();
+		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
 //		testDetail();
-//		testSearch("狗");
+//		testSearch("复仇者");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 		
-		testRecommend();
-//		testListTopKeywords();
+//		testRecommend();
+		testListTopKeywords();
 		
 //		testDoubanComment();
+//		List<SearchKeyword> keywordList = CacheSingleton.getVideoSearchWord();
+//		System.out.println(keywordList == null);
 	}
 	
 	/*
@@ -127,7 +129,7 @@ public class MovieTest {
 	private static void testMoiveList() {
 		try {
 			VideoParser vp = new VideoParserImp();
-			List<Video> videoList = vp.listMovie(null, null, null, null, null, 1);
+			List<Video> videoList = vp.listMovie(null, null, null, null, null, 2);
 			for (Video v : videoList) {
 				System.out.println(v.getName());
 				System.out.println(v.getPosterUrl());
@@ -181,16 +183,20 @@ public class MovieTest {
 	}
 
 	private static void testSearch(String keyword) {
+		long s = System.currentTimeMillis();
 		try {
 			VideoParser vp = new VideoParserImp();
 			List<Video> videoList = vp.searchVideo(keyword);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
+//				String sd = vp.getVideoPosterUrl(v.getDetailUrl());
+//				v.setPosterUrl(sd);
 				printVideo(v);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println(("执行时间：" + (System.currentTimeMillis()-s)/1000));
 	}
 
 	
