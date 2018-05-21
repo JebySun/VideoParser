@@ -1,11 +1,8 @@
 package com.jebysun.videoparser.tw80s;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.jebysun.videoparser.tw80s.VideoParserImp;
 import com.jebysun.videoparser.tw80s.bak.PostImageParser;
@@ -17,7 +14,6 @@ import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
-import com.jebysun.videoparser.tw80s.param.MovieQueryParam;
 
 public class MovieTest {
 
@@ -37,7 +33,6 @@ public class MovieTest {
 		
 //		testRecommend();
 		testListTopKeywords();
-		
 //		testDoubanComment();
 //		List<SearchKeyword> keywordList = CacheSingleton.getVideoSearchWord();
 //		System.out.println(keywordList == null);

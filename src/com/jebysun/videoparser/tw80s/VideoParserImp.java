@@ -105,6 +105,9 @@ public class VideoParserImp implements VideoParser {
 		
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
 		
+		//解析热门影视搜索关键字列表
+		parseVideoSearchWord(doc);
+		
 		//电影详情地址
 		v.setDetailUrl(url);
 
@@ -672,7 +675,7 @@ public class VideoParserImp implements VideoParser {
 		conn = conn.userAgent(Config.USER_AGENT);
 		//避免出现CertPathValidatorException
 		conn = conn.validateTLSCertificates(false);
-		//不跟随重定向
+		//不听从重定向，可提升响应速度，但有可能得不到正确数据的风险。
 //		conn.followRedirects(false);
 //		conn.header("Host", "www.80s.tw");
 //		conn.header("Referer", "https://www.80s.tw/");

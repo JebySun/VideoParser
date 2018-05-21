@@ -15,7 +15,7 @@ public class CacheSingleton {
 	
 	private static final String SEARCH_KEYWORD = "search_keyword";
 
-	private static CacheSingleton singleton;
+	private static volatile CacheSingleton singleton;
 
 	private Map<String, Object> cacheMap = new HashMap<>();
 	
