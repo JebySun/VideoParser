@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.jebysun.videoparser.tw80s.VideoParser;
-import com.jebysun.videoparser.tw80s.VideoParserImp;
+import com.jebysun.videoparser.tw80s.VideoParserImpl;
 import com.jebysun.videoparser.tw80s.model.Video;
 /**
  * 获取豆瓣高清海报
@@ -24,7 +24,7 @@ public class VideoParseClient {
 	public List<Video> listMovie(int index) {
 		List<Video> videoList = null;
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			videoList = vp.listMovie(null, null, null, null, null, index);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -35,7 +35,7 @@ public class VideoParseClient {
 	public void listMovieWithHDPoster(int index, MovieCallBack callBack) {
 		this.callBack = callBack;
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			videoList = vp.listMovie(null, null, null, null, null, index);
 			fixedThreadPool = Executors.newFixedThreadPool(6);
 			for (final Video v : videoList) {

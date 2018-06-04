@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import com.jebysun.videoparser.tw80s.VideoParserImp;
+import com.jebysun.videoparser.tw80s.VideoParserImpl;
 import com.jebysun.videoparser.tw80s.bak.PostImageParser;
 import com.jebysun.videoparser.tw80s.bak.VideoParseClient;
 import com.jebysun.videoparser.tw80s.bak.VideoParseClient.MovieCallBack;
@@ -14,6 +14,7 @@ import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
+import com.jebysun.videoparser.tw80s.param.QuerySortParam;
 
 public class MovieTest {
 
@@ -22,7 +23,7 @@ public class MovieTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		testMoiveList();
+//		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
 //		testDetail();
@@ -32,8 +33,8 @@ public class MovieTest {
 //		testVarietylist();
 		
 //		testRecommend();
-		testListTopKeywords();
-//		testDoubanComment();
+//		testListTopKeywords();
+		testDoubanComment();
 //		List<SearchKeyword> keywordList = CacheSingleton.getVideoSearchWord();
 //		System.out.println(keywordList == null);
 	}
@@ -78,9 +79,9 @@ public class MovieTest {
 	*/
 	
 	public static void testDoubanComment() {
-		VideoParser vp = new VideoParserImp();
+		VideoParser vp = new VideoParserImpl();
 		try {
-			DoubanCommentPage page = vp.listDoubanComment("26363254", 0);
+			DoubanCommentPage page = vp.listDoubanComment("26982681", 0);
 			List<DoubanComment> list = page.getCommentList();
 			System.out.println("本页大小：" + list.size());
 			for (DoubanComment comment : list) {
@@ -123,8 +124,8 @@ public class MovieTest {
 	
 	private static void testMoiveList() {
 		try {
-			VideoParser vp = new VideoParserImp();
-			List<Video> videoList = vp.listMovie(null, null, null, null, null, 2);
+			VideoParser vp = new VideoParserImpl();
+			List<Video> videoList = vp.listMovie(null, null, null, null, null, 1);
 			for (Video v : videoList) {
 				System.out.println(v.getName());
 				System.out.println(v.getPosterUrl());
@@ -139,7 +140,7 @@ public class MovieTest {
 	
 	private static void testTVlist() {
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			List<Video> videoList = vp.listTV(null, null, null, null, 1);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
@@ -153,7 +154,7 @@ public class MovieTest {
 	
 	private static void testMangalist() {
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			List<Video> videoList = vp.listManga(null, null, 1);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
@@ -166,7 +167,7 @@ public class MovieTest {
 	
 	private static void testVarietylist() {
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			List<Video> videoList = vp.listVariety(null, 1);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
@@ -180,7 +181,7 @@ public class MovieTest {
 	private static void testSearch(String keyword) {
 		long s = System.currentTimeMillis();
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			List<Video> videoList = vp.searchVideo(keyword);
 			for (Video v : videoList) {
 //				v = VideoParser.getVideoDetail(v.getDetailUrl());
@@ -198,7 +199,7 @@ public class MovieTest {
 	private static void testDetail() {
 		String url = "https://www.80s.tw/ju/22520";
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			Video v = vp.getVideoDetail(url);
 			printVideo(v);
 		} catch (IOException e) {
@@ -209,7 +210,7 @@ public class MovieTest {
 	private static void testRecommend() {
 		String url = "https://www.80s.tw/zy/20527";
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			List<Video> videoList = vp.listRecommendVideo(url);
 			for (Video v : videoList) {
 				printVideo(v);
@@ -221,7 +222,7 @@ public class MovieTest {
 	
 	private static void testListTopKeywords() {
 		try {
-			VideoParser vp = new VideoParserImp();
+			VideoParser vp = new VideoParserImpl();
 			List<SearchKeyword> keywordList = vp.listTopKeyword();
 			for (SearchKeyword v : keywordList) {
 				System.out.println("标题：" + v.getTitle());
@@ -269,7 +270,7 @@ public class MovieTest {
 		System.out.println("用户名：" + comment.getUserName());
 		System.out.println("头像：" + comment.getUserAvatar());
 		System.out.println("用户主页：" + comment.getUserPageUrl());
-		System.out.println("打分：" + comment.getRatingLevel().getRatingValue());
+//		System.out.println("打分：" + comment.getRatingLevel().getRatingValue());
 		System.out.println("评论：" + comment.getComment());
 		System.out.println("投票数：" + comment.getThumbsUpCount());
 		System.out.println("日期：" + new SimpleDateFormat("yyyy-MM-dd").format(comment.getCreateDate()));

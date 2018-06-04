@@ -26,6 +26,7 @@ public final class TVQueryParam {
 
 	
 	//年份
+	public static String YEAR_2018 = "2018";
 	public static String YEAR_2017 = "2017";
 	public static String YEAR_2016 = "2016";
 	public static String YEAR_2015 = "2015";
@@ -37,16 +38,16 @@ public final class TVQueryParam {
 	public static String YEAR_2009 = "2009";
 	public static String YEAR_2008 = "2008";
 	public static String YEAR_2007 = "2007";
-	public static String YEAR_2006 = "2006";
-	// 2005及以前
-	public static String YEAR_2005_BEFORE = "2005";
+	// 2006及以前
+	public static String YEAR_2006_BEFORE = "2006";
 	
-	//地区
+	// 地区
+	public static String AREA_ALL = "0";
 	public static String AREA_DALUJU = "9";
 	public static String AREA_GANGTAIJU = "10";
 	public static String AREA_RIHANJU = "11";
 	public static String AREA_OUMEIJU = "12";
-	public static String AREA_OTHER = "13";
+
 	
 	
 }
