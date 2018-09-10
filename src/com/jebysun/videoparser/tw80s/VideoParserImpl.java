@@ -47,7 +47,7 @@ public class VideoParserImpl implements VideoParser {
 	 */
 	@Override
 	public List<Video> listMovie(String category, String area, String language, String year, String sort, int pageIndex) throws IOException {
-		return listMovie(category, area, language, year, sort, "p" + pageIndex);
+		return listMovie(category, area, language, year, sort, "p/" + pageIndex);
 	}
 	
 	/**
@@ -129,16 +129,13 @@ public class VideoParserImpl implements VideoParser {
 		}
 		
 		//视频截图
-		Elements screenShotH2Elmts = doc.select("h2#screenshots");
+		Elements screenShotH2Elmts = doc.select(".noborder>img");
 		if (!screenShotH2Elmts.isEmpty()) {
-			Elements screenShotImgElmts = screenShotH2Elmts.get(0).parent().select(">img");
-			if (!screenShotImgElmts.isEmpty()) {
-				String screenShotUrl = screenShotImgElmts.get(0).attr("_src");
-				if (screenShotUrl !=null && !screenShotUrl.startsWith("http")) {
-					screenShotUrl = "http:" + screenShotUrl;
-				}
-				v.setScreenShotUrl(screenShotUrl);
+			String screenShotUrl = screenShotH2Elmts.get(0).attr("src");
+			if (screenShotUrl != null && !screenShotUrl.startsWith("http")) {
+				screenShotUrl = "http:" + screenShotUrl;
 			}
+			v.setScreenShotUrl(screenShotUrl);
 		}
 		
 		//备注
@@ -331,8 +328,7 @@ public class VideoParserImpl implements VideoParser {
 			v = new Video();
 			v.setName(theNameAndLinkNode.text());
 			v.setDetailUrl(Config.DOMAIN + theNameAndLinkNode.attr("href"));
-			String imgPath = imgNode.attr("_src");
-			imgPath = imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null;
+			String imgPath = imgNode.attr("src");
 			if (imgPath != null && !imgPath.startsWith("http")) {
 				imgPath = "http:" + imgPath;
 			}
@@ -729,8 +725,8 @@ public class VideoParserImpl implements VideoParser {
 			}
 			v = new Video();
 			v.setName(videoTitle);
-			v.setDetailUrl(Config.DOMAIN + nameEle.attr("href"));
 			v.setAlias(e.ownText());
+			v.setDetailUrl(Config.DOMAIN + nameEle.attr("href"));
 			Elements ems = e.select("em");
 			if (ems.size() == 2) {
 				v.setScore(ems.get(0).text().replace("豆瓣", "").replace("分", ""));
@@ -777,9 +773,7 @@ public class VideoParserImpl implements VideoParser {
 				v.setNote(noteNodes.get(0).text());
 			}
 			if (imageNodes.size() != 0) {
-				//e.g: //t.dyxz.la/upload/img/201612/poster_20161213_2146695_b.jpg!list
-				String imgPath = imageNodes.get(0).attr("_src");
-				imgPath = imgPath.lastIndexOf("!")==(imgPath.length()-5) ? imgPath.substring(0, imgPath.lastIndexOf("!")) : null;
+				String imgPath = imageNodes.get(0).attr("src");
 				if (imgPath != null && !imgPath.startsWith("http")) {
 					imgPath = "http:" + imgPath;
 				}

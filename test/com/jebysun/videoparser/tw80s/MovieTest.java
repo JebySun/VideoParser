@@ -27,14 +27,14 @@ public class MovieTest {
 //		testVideoClient();
 //		testHDPost();
 //		testDetail();
-//		testSearch("复仇者");
+		testSearch("好声音");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 		
 //		testRecommend();
 //		testListTopKeywords();
-		testDoubanComment();
+//		testDoubanComment();
 //		List<SearchKeyword> keywordList = CacheSingleton.getVideoSearchWord();
 //		System.out.println(keywordList == null);
 	}
