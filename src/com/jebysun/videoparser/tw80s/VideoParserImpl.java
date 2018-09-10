@@ -64,7 +64,7 @@ public class VideoParserImpl implements VideoParser {
 	public List<Video> listTV(String category, String area, String year, String sort, int pageIndex) throws IOException {
 		//地区默认全部需要设置地区参数为0
 		area = (area==null) ? "0" : area;
-		return listTV(category, area, year, sort, "p" + pageIndex);
+		return listTV(category, area, year, sort, "p/" + pageIndex);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class VideoParserImpl implements VideoParser {
 	 */
 	@Override
 	public List<Video> listManga(String type, String sort, int pageIndex) throws IOException {
-		return listManga(type, sort, "p" + pageIndex);
+		return listManga(type, sort, "p/" + pageIndex);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class VideoParserImpl implements VideoParser {
 	 */
 	@Override
 	public List<Video> listVariety(String sort, int pageIndex) throws IOException {
-		return listVariety(sort, "p" + pageIndex);
+		return listVariety(sort, "p/" + pageIndex);
 	}
 	
 	/**
