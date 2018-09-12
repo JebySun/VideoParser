@@ -129,8 +129,9 @@ public class VideoParserImpl implements VideoParser {
 		}
 		
 		//视频截图
-		Elements screenShotH2Elmts = doc.select(".noborder>img");
+		Elements screenShotH2Elmts = doc.select("#screenshots");
 		if (!screenShotH2Elmts.isEmpty()) {
+			screenShotH2Elmts = screenShotH2Elmts.get(0).parent().select("img");
 			String screenShotUrl = screenShotH2Elmts.get(0).attr("src");
 			if (screenShotUrl != null && !screenShotUrl.startsWith("http")) {
 				screenShotUrl = "http:" + screenShotUrl;

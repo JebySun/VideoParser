@@ -26,8 +26,8 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-//		testDetail();
-		testSearch("好声音");
+		testDetail();
+//		testSearch("好声音");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
@@ -197,7 +197,7 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-		String url = "https://www.80s.tw/ju/22520";
+		String url = "https://www.80s.tw/movie/23091";
 		try {
 			VideoParser vp = new VideoParserImpl();
 			Video v = vp.getVideoDetail(url);
