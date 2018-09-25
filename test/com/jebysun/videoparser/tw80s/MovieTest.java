@@ -14,7 +14,6 @@ import com.jebysun.videoparser.tw80s.model.DoubanCommentPage;
 import com.jebysun.videoparser.tw80s.model.DownloadInfo;
 import com.jebysun.videoparser.tw80s.model.SearchKeyword;
 import com.jebysun.videoparser.tw80s.model.Video;
-import com.jebysun.videoparser.tw80s.param.QuerySortParam;
 
 public class MovieTest {
 
@@ -26,15 +25,15 @@ public class MovieTest {
 //		testMoiveList();
 //		testVideoClient();
 //		testHDPost();
-		testDetail();
-//		testSearch("好声音");
+//		testDetail();
+//		testSearch("蜡笔小新");
 //		testTVlist();
 //		testMangalist();
 //		testVarietylist();
 		
 //		testRecommend();
 //		testListTopKeywords();
-//		testDoubanComment();
+		testDoubanComment();
 //		List<SearchKeyword> keywordList = CacheSingleton.getVideoSearchWord();
 //		System.out.println(keywordList == null);
 	}
@@ -78,10 +77,13 @@ public class MovieTest {
 	}
 	*/
 	
+	/**
+	 * 豆瓣短评
+	 */
 	public static void testDoubanComment() {
 		VideoParser vp = new VideoParserImpl();
 		try {
-			DoubanCommentPage page = vp.listDoubanComment("26982681", 0);
+			DoubanCommentPage page = vp.listDoubanComment("26761328", 0);
 			List<DoubanComment> list = page.getCommentList();
 			System.out.println("本页大小：" + list.size());
 			for (DoubanComment comment : list) {
@@ -197,7 +199,8 @@ public class MovieTest {
 
 	
 	private static void testDetail() {
-		String url = "https://www.80s.tw/movie/23091";
+//		String url = "https://www.80s.tw/movie/23091";
+		String url = "https://www.80s.tw/movie/23443";
 		try {
 			VideoParser vp = new VideoParserImpl();
 			Video v = vp.getVideoDetail(url);

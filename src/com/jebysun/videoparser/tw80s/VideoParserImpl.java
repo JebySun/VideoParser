@@ -1,5 +1,6 @@
 package com.jebysun.videoparser.tw80s;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -165,7 +166,7 @@ public class VideoParserImpl implements VideoParser {
 		Elements es = baseInfoNode.select(">span");
 		for (Element e : es) {
 			String[] sArr = e.text().split("：", 2);
-			if (sArr.length==2) {
+			if (sArr.length == 2) {
 				v = fillBaseInfo(v, sArr);
 			}
 		}
@@ -272,15 +273,24 @@ public class VideoParserImpl implements VideoParser {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for (Element commentNode : commentNodes) {
 			comment = new DoubanComment();
+			
 			comment.setUserAvatar(commentNode.select("div.avatar img").first().attr("src"));
+			
 			String commentContent = commentNode.select("p").last().text();
 			comment.setComment(commentContent);
-			String voteStr = commentNode.select("span.votes").first().ownText();
-			comment.setThumbsUpCount(Integer.parseInt(voteStr));
+			
+			//有可能没点赞
+			Elements votesEles = commentNode.select("span.votes");
+			if (!votesEles.isEmpty()) {
+				comment.setThumbsUpCount(Integer.parseInt(votesEles.first().ownText()));
+			}
+
 			Element userNameNode = commentNode.select("span.comment-info>a").first();
 			comment.setUserName(userNameNode.ownText());
+			
 			comment.setUserPageUrl(userNameNode.attr("href"));
 			Elements ratingEles = commentNode.select("span.rating");
+			
 			//有可能没打分
 			if (ratingEles.size() != 0) {
 				comment.setRatingLevel(Tw80sUtil.convertRatingStringToEnum(ratingEles.first().attr("title")));
@@ -443,6 +453,7 @@ public class VideoParserImpl implements VideoParser {
 		String url = Config.DOMAIN + queryUrl;
 		//获取文档
 		Document doc = getDocument(url, Config.TIMEOUT, 0);
+		
 		//解析热门影视搜索关键字列表
 		parseVideoSearchWord(doc);
 		//解析视频列表
