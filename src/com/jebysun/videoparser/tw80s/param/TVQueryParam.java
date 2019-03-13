@@ -7,7 +7,7 @@ package com.jebysun.videoparser.tw80s.param;
  */
 public final class TVQueryParam {
 
-	//类别
+	// 类别
 	public static String CATEGORY_OUXIANG = "1";
 	public static String CATEGORY_YANQING = "2";
 	public static String CATEGORY_JUNLV = "3";
@@ -25,7 +25,8 @@ public final class TVQueryParam {
 	public static String CATEGORY_JUQING = "f";
 
 	
-	//年份
+	// 年份
+	public static String YEAR_2019 = "2019";
 	public static String YEAR_2018 = "2018";
 	public static String YEAR_2017 = "2017";
 	public static String YEAR_2016 = "2016";
@@ -37,9 +38,10 @@ public final class TVQueryParam {
 	public static String YEAR_2010 = "2010";
 	public static String YEAR_2009 = "2009";
 	public static String YEAR_2008 = "2008";
-	public static String YEAR_2007 = "2007";
-	// 2006及以前
-	public static String YEAR_2006_BEFORE = "2006";
+	// 2007及以前
+	public static String YEAR_2007_BEFORE = "2007";
+
+
 	
 	// 地区
 	public static String AREA_ALL = "0";

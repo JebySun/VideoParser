@@ -71,6 +71,7 @@ public final class MovieQueryParam {
 	public static final String LANGUAGE_CANTONESE = "7";
 	
 	//年份
+	public static final String YEAR_2019 = "2019";
 	public static final String YEAR_2018 = "2018";
 	public static final String YEAR_2017 = "2017";
 	public static final String YEAR_2016 = "2016";
@@ -82,9 +83,8 @@ public final class MovieQueryParam {
 	public static final String YEAR_2010 = "2010";
 	public static final String YEAR_2009 = "2009";
 	public static final String YEAR_2008 = "2008";
-	public static final String YEAR_2007 = "2007";
-	// 2006及以前
-	public static final String YEAR_2006_BEFORE = "2006";
+	// 2007及以前
+	public static final String YEAR_2007_BEFORE = "2007";
 
 	
 }
